@@ -12,7 +12,8 @@ var userSchema = new Schema({
 		required: true
 	},
 	profile_picture: {
-		type: String
+		type: String,
+		default: 'user.png'
 	},
 	cover_picture: {
 		type: String
@@ -39,7 +40,19 @@ var userSchema = new Schema({
 	score: {
 		type: Number
 	},
-	level: {
+	donations: [{
+    amount: {
+      type: Number
+    },
+    user: {
+      type: Schema.Types.ObjectId, ref: 'User'
+    },
+    created_at: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  level: {
 		type: Number
 	}
 }, {discriminatorKey: 'type'});

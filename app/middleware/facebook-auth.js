@@ -13,7 +13,6 @@ const fbStrategy = new Strategy({
       .then((data) => {
         let response = profile._json;
         let address= response.location.name.split(',');
-        console.log("Response: " + response);
         if(data){
           return callback(null, data);
         } else {
@@ -43,9 +42,7 @@ const fbStrategy = new Strategy({
           );
           person.save()
             .then((data) => {
-              console.log("Person: " + person);
-              console.log("Data: " + data);
-              return callback(null, person);
+              return callback(null, data);
             })
             .catch((err) => {
               return callback(err);

@@ -34,9 +34,6 @@ var personSchema = new Schema({
   followed_receivingEntities: [{
     type: Schema.Types.ObjectId, ref: 'User'
   }],
-  donated_campaigns: [{
-    type: Schema.Types.ObjectId, ref: 'Campaign'
-  }],
   volunteer_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign'
   }],
