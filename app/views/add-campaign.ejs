@@ -1,0 +1,86 @@
+<% include header %>
+  <% include nav %>
+  <div class="container">    
+            
+    <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">Campaña</div>
+            </div>  
+            <div class="panel-body" >
+                <form id="add-campaign" method="post" action=".">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='XFe2rTYl9WOpV8U6X5CfbIuOZOELJ97S' />
+                        <div id="div_id_username" class="form-group required">
+                            <label for="category" class="control-label col-md-4  requiredField"> Categoría <span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 ">
+                                <input class="input-md  textinput textInput form-control" id="category" maxlength="30" name="category" placeholder="Catería de la campaña" style="margin-bottom: 10px" type="text" />
+                            </div>
+                        </div>
+                        <div id="div_id_email" class="form-group required">
+                            <label for="name" class="control-label col-md-4  requiredField">Nombre<span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 ">
+                                <input class="input-md emailinput form-control" id="name" name="name" placeholder="Nombre de la camapaña" style="margin-bottom: 10px" type="text" />
+                            </div>     
+                        </div>
+                        <div id="div_id_password1" class="form-group required">
+                            <label for="start_date" class="control-label col-md-4  requiredField">Fecha de Inicio<span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 "> 
+                                <input class="input-md textinput textInput form-control" id="start_date" name="start_date" placeholder="Fecha de inicio de la campaña" style="margin-bottom: 10px" type="date" />
+                            </div>
+                        </div>
+                        <div id="div_id_password2" class="form-group required">
+                             <label for="end_date" class="control-label col-md-4  requiredField"> Fecha de Cierre<span class="asteriskField">*</span> </label>
+                             <div class="controls col-md-8 ">
+                                <input class="input-md textinput textInput form-control" id="end_date" name="end_date" placeholder="Fecha cierre de la campaña" style="margin-bottom: 10px" type="date" />
+                            </div>
+                        </div>
+                        <div id="div_id_name" class="form-group required"> 
+                            <label for="aspired_amout" class="control-label col-md-4  requiredField"> Cantidad deseada<span class="asteriskField">*</span> </label> 
+                            <div class="controls col-md-8 "> 
+                                <input class="input-md textinput textInput form-control" id="aspired_amout" name="aspired_amout" placeholder="Indique la cantidad que desea recolectar" style="margin-bottom: 10px" type="text" />
+                            </div>
+                        </div>
+                        <div id="div_id_company" class="form-group required"> 
+                            <label for="people_reached" class="control-label col-md-4  requiredField"> Alcance<span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 "> 
+                                 <input class="input-md textinput textInput form-control" id="people_reached" name="people_reached" placeholder="Cantidad de personas que se beneficiaran con esta campaña" style="margin-bottom: 10px" type="text" />
+                            </div>
+                        </div> 
+                        <div id="div_id_catagory" class="form-group required">
+                            <label for="description" class="control-label col-md-4  requiredField"> Descripción<span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 "> 
+                                 <input class="input-md textinput textInput form-control" id="description" name="description" placeholder="Descripción de la campaña" style="margin-bottom: 10px" type="text" />
+                            </div>
+                        </div> 
+                        <div id="div_id_number" class="form-group required">
+                             <label for="address.city" class="control-label col-md-4  requiredField"> Ciudad<span class="asteriskField">*</span> </label>
+                             <div class="controls col-md-8 ">
+                                 <input class="input-md textinput textInput form-control" id="address.city" name="address[city]" placeholder="Ciudad de la campaña" style="margin-bottom: 10px" type="text" />
+                            </div> 
+                        </div> 
+                        <div id="div_id_location" class="form-group required">
+                            <label for="address.state" class="control-label col-md-4  requiredField"> Estado<span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 ">
+                                <input class="input-md textinput textInput form-control" id="address[state]" name="address[state]" placeholder="Estado de la campaña" style="margin-bottom: 10px" type="text" />
+                            </div> 
+                        </div> 
+                        <div id="div_id_location" class="form-group required">
+                            <label for="address.country" class="control-label col-md-4  requiredField"> País<span class="asteriskField">*</span> </label>
+                            <div class="controls col-md-8 ">
+                                <input class="input-md textinput textInput form-control" id="address.country" name="address[country]" placeholder="País de la campaña" style="margin-bottom: 10px" type="text" />
+                            </div> 
+                        </div> 
+                        <div class="form-group"> 
+                            <div class="aab controls col-md-4 "></div>
+                            <div class="controls col-md-8 ">
+                                <input type="submit" name="send" value="Guardar" class="btn btn-primary btn btn-info" id="send" />
+                            </div>
+                        </div>
+
+                </form>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<% include footer %>

@@ -1,0 +1,59 @@
+<% include header %>
+  <% include nav %>
+  <div class="container body">
+    <div class="main_container">
+    <div class="clearfix"></div>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= user.name %></h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="<%= user.profile_picture %>" class="img-circle img-responsive"> </div>
+            <div class=" col-md-9 col-lg-9 "> 
+              <table class="table table-user-information">
+                <tbody>
+                  <tr>
+                    <td>Usuario:</td>
+                    <td><%= user.username %></td>
+                  </tr>
+                  <tr>
+                    <td>Edad:</td>
+                    <td><%= user.age %></td>
+                  </tr>
+                  <tr>
+                    <td>Frase:</td>
+                    <td><%= user.slogan %></td>
+                  </tr>
+               
+                     <tr>
+                         <tr>
+                    <td>Genero: </td>
+                    <td><%= user.gender %></td>
+                  </tr>
+                    <tr>
+                    <td>Dirección: </td>
+                    <td><%= user.address.city %>, <%= user.address.state %>, <%= user.address.country %></td>
+                  </tr>
+                  <tr>
+                    <td>Correo: </td>
+                    <td> <%= user.email %> </td>
+                  </tr>
+                    <td>Puntaje: </td>
+                    <td><%= user.score %> </td>
+                       
+                  </tr>
+                 
+                </tbody>
+              </table>
+              
+              <a href="/campaign" class="btn btn-primary">Crear Campaña</a>
+              <a href="/company" class="btn btn-primary">Crear Empresa</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% include footer %>

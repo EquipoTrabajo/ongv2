@@ -1,0 +1,74 @@
+<% include header %>
+  <% include nav %>
+<div class="col-md-3 col-xs-12 widget widget_tally_box">
+    <div class="x_panel fixed_height_390">
+      <div class="x_content">
+
+        <div class="flex">
+          <ul class="list-inline widget_profile_box">
+            <li>
+              <a>
+                <i class="fa fa-facebook"></i>
+              </a>
+            </li>
+            <li>
+              <a href="" id="changeProfilePicture"><img src="<%= company.profile_picture %>" alt="..." class="img-circle profile_img"></a>
+              <form action="POST" enctype="multipart/form-data" style="display: none;" id="formProfilePicture">
+                <input type="file" name="profilePicture" id="profilePicture">
+                <input type="submit">
+              </form>
+            </li>
+            <li>
+              <a>
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="name"><%= company.name %></h3>
+        <p><%= company.slogan %></p>
+
+        <div class="flex">
+          <ul class="list-inline count2">
+            <p><%= company.address.city %>,<%= company.address.state %>,<%= company.address.country %></p>
+          </ul>
+        </div>
+        <p>
+          <%= company.description  %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+
+      $('#changeProfilePicture').click(function (event) {
+        event.preventDefault();
+        $('#profilePicture').click();
+        /*$('#formProfilePicture').submit(function () {
+          $.post("/user/<%= user._id %>/upload_picture")
+        })*/
+      });
+
+      /*$('#profilePicture').on('change', function () {
+        var data = new FormData();
+        var files=$(this).get(0).files;
+        data.append('file', files[0]);
+        $.ajax({
+            url: '/user/<%= user._id %>/upload_picture',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+            }
+        });
+      });*/
+    });
+  </script>
+
+<% include footer %>
