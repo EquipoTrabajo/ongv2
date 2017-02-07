@@ -53,6 +53,8 @@
           </div>
         </div>
       </div>
+
+
       <div class="col-md-6 col-sm-6 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
@@ -120,18 +122,16 @@
                       <thead>
                         <tr>
                           <th>Nombre</th>
-                          <th>Fecha Inicio</th>
-                          <th>Fecha Fin</th>
-                          <th>Categoría</th>
+                          <th>Fecha</th>
+                          <th>Cantidad</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% for(var i=0; i< profile.created_campaigns.length; i++) { %>
+                        <% for(var i=0; i< profile.donations.length; i++) { %>
                           <tr>
-                            <th scope="row"><a href="/campaigns/<%= profile.created_campaigns[i]._id %>"><%= profile.created_campaigns[i].name %></a></th>
-                            <td><%= profile.created_campaigns[i].start_date %></td>
-                            <td><%= profile.created_campaigns[i].end_date %></td>
-                            <td><%= profile.created_campaigns[i].category %></td>
+                            <th scope="row"><a href="/campaigns/<%= profile.donations[i].campaign._id %>"><%= profile.donations[i].campaign.name %></a></th>
+                            <td><%= profile.donations[i].created_at %></td>
+                            <td><%= profile.donations[i].amount %></td>
                           </tr>
                         <% } %>
                       </tbody>
@@ -152,12 +152,12 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% for(var i=0; i< profile.created_campaigns.length; i++) { %>
+                        <% for(var i=0; i< profile.volunteer_campaigns.length; i++) { %>
                           <tr>
-                            <th scope="row"><a href="/campaigns/<%= profile.created_campaigns[i]._id %>"><%= profile.created_campaigns[i].name %></a></th>
-                            <td><%= profile.created_campaigns[i].start_date %></td>
-                            <td><%= profile.created_campaigns[i].end_date %></td>
-                            <td><%= profile.created_campaigns[i].category %></td>
+                            <th scope="row"><a href="/campaigns/<%= profile.volunteer_campaigns[i]._id %>"><%= profile.volunteer_campaigns[i].name %></a></th>
+                            <td><%= profile.volunteer_campaigns[i].start_date %></td>
+                            <td><%= profile.volunteer_campaigns[i].end_date %></td>
+                            <td><%= profile.volunteer_campaigns[i].category %></td>
                           </tr>
                         <% } %>
                       </tbody>
@@ -171,6 +171,126 @@
           </div>
         </div>
       </div>
+
+
+
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2><i class="fa fa-bars"></i> Otros <small></small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+              <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#companies" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Empresas</a>
+                </li>
+                <li role="presentation" class=""><a href="#activities" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Donaste</a>
+                </li>
+                <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Voluntario</a>
+                </li>
+              </ul>
+              <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="companies" aria-labelledby="home-tab">
+                  <div class="x_content">
+
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Slogan</th>
+                          <th>Descripción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for(var i=0; i< profile.administrated_companies.length; i++) { %>
+                          <tr>
+                            <th scope="row"><a href="/campaigns/<%= profile.administrated_companies[i].username %>"><%= profile.administrated_companies[i].name %></a></th>
+                            <td><%= profile.administrated_companies[i].slogan %></td>
+                            <td><%= profile.administrated_companies[i].description %></td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="activities" aria-labelledby="profile-tab">
+                  <div class="x_content">
+
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Fecha</th>
+                          <th>Cantidad</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for(var i=0; i< profile.donations.length; i++) { %>
+                          <tr>
+                            <th scope="row"><a href="/campaigns/<%= profile.donations[i].campaign._id %>"><%= profile.donations[i].campaign.name %></a></th>
+                            <td><%= profile.donations[i].created_at %></td>
+                            <td><%= profile.donations[i].amount %></td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+                  <div class="x_content">
+
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Fecha Inicio</th>
+                          <th>Fecha Fin</th>
+                          <th>Categoría</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for(var i=0; i< profile.volunteer_campaigns.length; i++) { %>
+                          <tr>
+                            <th scope="row"><a href="/campaigns/<%= profile.volunteer_campaigns[i]._id %>"><%= profile.volunteer_campaigns[i].name %></a></th>
+                            <td><%= profile.volunteer_campaigns[i].start_date %></td>
+                            <td><%= profile.volunteer_campaigns[i].end_date %></td>
+                            <td><%= profile.volunteer_campaigns[i].category %></td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
     </div>
   </div>
 

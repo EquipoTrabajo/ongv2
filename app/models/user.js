@@ -44,8 +44,8 @@ var userSchema = new Schema({
     amount: {
       type: Number
     },
-    user: {
-      type: Schema.Types.ObjectId, ref: 'User'
+    campaign: {
+      type: Schema.Types.ObjectId, ref: 'Campaign'
     },
     created_at: {
       type: Date,

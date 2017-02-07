@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 
+var Person = require('./person');
+
 var Schema = mongoose.Schema;
 
 var campaignSchema = new Schema({
@@ -78,9 +80,6 @@ var campaignSchema = new Schema({
   shares: [{
     type: Schema.Types.ObjectId, ref:'User'
   }],
-  donors: [{
-    type: Schema.Types.ObjectId, ref:'User'
-  }],
   volunteers: [{
     type: Schema.Types.ObjectId, ref:'User'
   }],
@@ -133,3 +132,42 @@ var campaignSchema = new Schema({
 
 
 var Campaign = module.exports = mongoose.model('Campaign', campaignSchema);
+
+
+module.exports.getAllCampaigns = () => {
+  Campaign.find().exec((err, campaigns) => {
+    if(err){
+      throw err;
+    }
+    return campaigns;
+  });
+}
+
+
+module.exports.getRecommendedCampaigns = (id, callback) => {
+  Person.findById(id, (err, person) => {
+    if(err){
+      throw err;
+    }
+    Campaign.find({'_id': {$in: person.liked_campaigns}}, (err, campaigns) => {
+      if (err) {
+        return err;
+      }
+      var creators = [];
+      var tempCampId = [];
+      for(var camp in campaigns) {
+        tempCampId.push(campaigns[camp]._id);
+        for(var i=0; i<campaigns[camp].creators.length; i++) {
+          creators.push(campaigns[camp].creators[i]);
+        }
+      }
+      Campaign.find({'creators': {$in: creators}, '_id': {$nin: tempCampId}, 'priority': {$gt: 0}, 'start_date': {$lt: Date.now()}, 'end_date': {$gt: Date.now()}}, callback);
+    });
+  });
+}
+
+
+module.exports.getNearbyCampaigns = function (user, callback) {
+  console.log(Date.now());
+  Campaign.find({'address.city': user, 'start_date': {$lt: Date()}, 'end_date': {$gt: Date()}}).exec(callback);
+}

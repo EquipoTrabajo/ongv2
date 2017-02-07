@@ -39,21 +39,26 @@
       </tr>
     </tbody>
   </table>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="btn-group" role="group" aria-label="...">
-        <button type="button" class="btn btn-default" id="btn-like">
-          <span class="glyphicon glyphicon-thumbs-up"></span>
-        </button>
-        <button type="button" class="btn btn-default" id="btn-dislike">
-          <span class="glyphicon glyphicon-thumbs-down"></span>
-        </button>
-        <button type="button" class="btn btn-default" id="btn-share">
-          <span class="glyphicon glyphicon-share-alt"></span>
-        </button>
+  <% if (user) { %>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="btn-group" role="group" aria-label="...">
+          <button type="button" class="btn btn-default" id="btn-like">
+            <span class="glyphicon glyphicon-thumbs-up"></span>
+          </button>
+          <button type="button" class="btn btn-default" id="btn-dislike">
+            <span class="glyphicon glyphicon-thumbs-down"></span>
+          </button>
+          <button type="button" class="btn btn-default" id="btn-share">
+            <span class="glyphicon glyphicon-share-alt"></span>
+          </button>
+          <button type="button" class="btn btn-default" id="btn-volunteer">
+            <span class="">Ser Voluntario</span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  <%}%>
 </div>
 
 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -130,8 +135,34 @@
               booth letterpress, commodo enim craft beer mlkshk aliquip</p>
           </div>
           <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
-            <p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-              booth letterpress, commodo enim craft beer mlkshk </p>
+            <div class="x_content">
+              <ul class="list-unstyled timeline" id="commentList">
+                <% for(var i=0; i<campaign.donations.length; i++) { %>
+                  <li>
+                    <div class="block">
+                      <div class="block_content">
+                        <h2 class="title">
+                                        <a>Comment</a>
+                                    </h2>
+                        <div class="byline">
+                          <span><%= campaign.donations[i].created_at %></span> by <a><%= campaign.donations[i].user.name %></a>
+                        </div>
+                        <p class="excerpt"><%= campaign.donations[i].amount %></a>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+              <% } %>
+              </ul>
+            </div>
+            <% if (user) { %>
+              <form action="PUT" id="donateCampaign" class="form-inline"> 
+                <div class="form-group">
+                  <input type="text" name="amount" id="amountDonateCampaign" placeholder="Cantidad a donar">
+                </div>
+                <input type="submit" class="btn btn-primary" value="Donar">
+              </form>
+            <% } %>
           </div>
         </div>
       </div>
@@ -175,6 +206,17 @@
       });
     });
 
+    $('#btn-volunteer').click(function () {
+      console.log('clicked');
+      $.ajax({
+        url: '/campaign/<%= campaign._id %>/volunteer',
+        type: 'PUT',
+        success: function (data) {
+          console.log(data);
+        }
+      });
+    });
+
     $('#formComment').submit(function (e) {
       e.preventDefault();
       $.ajax({
@@ -183,6 +225,19 @@
         data: $('#formComment').serialize(),
         success: function (data) {
           $('#textComment').val('');
+          //$('#commentList').append("<li><div class='block'><div class='tags'><a href='' class='tag'><span>" + data. + "</span></a></div><div class='block_content'><h2 class='title'><a>Comment</a></h2><div class='byline'><span></span> by <a></a></div><p class='excerpt'></a></p></div></div></li>")
+        }
+      });
+    });
+
+    $('#donateCampaign').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: '/campaign/<%= campaign._id %>/donate',
+        type: 'PUT',
+        data: $('#donateCampaign').serialize(),
+        success: function (data) {
+          $('#amountDonateCampaign').val('');
           //$('#commentList').append("<li><div class='block'><div class='tags'><a href='' class='tag'><span>" + data. + "</span></a></div><div class='block_content'><h2 class='title'><a>Comment</a></h2><div class='byline'><span></span> by <a></a></div><p class='excerpt'></a></p></div></div></li>")
         }
       });

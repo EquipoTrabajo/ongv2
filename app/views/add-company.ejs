@@ -78,7 +78,8 @@
         url: "/company",
         data: JSON.stringify(company),
         success: function (data) {
-          window.location.href = "/company/" + data.username;
+          // window.location.href = "/company/" + data.username;
+          window.location.href = "/profile";
         },
         error: function (err) {
           console.log(err);
