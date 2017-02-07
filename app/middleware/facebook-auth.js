@@ -3,8 +3,8 @@ const Person = require('../models/person');
 
 
 const fbStrategy = new Strategy({
-    clientID: '359887661051617',
-    clientSecret: '328a0202aaa23d3a10b5702521c36364',
+    clientID: process.env.FB_CLIENTID,
+    clientSecret: process.env.FB_CLIENTSECRET,
     callbackURL: 'http://localhost:3000/login/facebook/return',
     profileFields: ['id','name','cover','picture','location','gender','education','email','friends', 'likes{name,category}']
   },

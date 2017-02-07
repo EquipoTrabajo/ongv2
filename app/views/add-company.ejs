@@ -15,18 +15,6 @@
                     <input class="input-md  textinput textInput form-control" id="name" maxlength="30" name="name" placeholder="Nombre de la empresa" style="margin-bottom: 10px" type="text" />
                 </div>
             </div>
-            <div id="div_id_email" class="form-group required">
-                <label for="profile_picture" class="control-label col-md-4  requiredField">Image de perfil<span class="asteriskField">*</span> </label>
-                <div class="controls col-md-8 ">
-                    <input class="input-md emailinput form-control" id="profile_picture" name="profile_picture" placeholder="URL Imagen de perfil" style="margin-bottom: 10px" type="text" />
-                </div>     
-            </div>
-            <div id="div_id_password1" class="form-group required">
-                <label for="cover_picture" class="control-label col-md-4  requiredField">Imagen de Cover<span class="asteriskField">*</span> </label>
-                <div class="controls col-md-8 "> 
-                    <input class="input-md textinput textInput form-control" id="cover_picture" name="cover_picture" placeholder="URL Imagen de Cover" style="margin-bottom: 10px" type="date" />
-                </div>
-            </div>
             <div id="div_id_password2" class="form-group required">
                  <label for="username" class="control-label col-md-4  requiredField"> Nombre de Usuario<span class="asteriskField">*</span> </label>
                  <div class="controls col-md-8 ">
@@ -91,6 +79,9 @@
         data: JSON.stringify(company),
         success: function (data) {
           window.location.href = "/company/" + data.username;
+        },
+        error: function (err) {
+          console.log(err);
         },
         contentType: "application/json",
         dataType: "json"

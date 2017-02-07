@@ -52,6 +52,9 @@ var userSchema = new Schema({
       default: Date.now
     }
   }],
+  created_campaigns: [{
+    type: Schema.Types.ObjectId, ref: 'Campaign'
+  }],
   level: {
 		type: Number
 	}

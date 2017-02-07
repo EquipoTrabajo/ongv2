@@ -9,7 +9,7 @@ var config = {
       name: 'ong'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://127.0.0.4/ong-dev'
+    db: process.env.DATABASE
   },
 
   test: {

@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 
 var express = require('express'),
   config = require('./config/config'),

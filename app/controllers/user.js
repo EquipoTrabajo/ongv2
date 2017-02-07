@@ -3,6 +3,8 @@ var express = require('express'),
   ensureAuthenticated = require('../middleware/authenticated'),
   mongoose = require('mongoose'),
   Company = require('../models/company'),
+  Person = require('../models/person'),
+  User = require('../models/user'),
   Comment = require('../models/comment'),
   Campaign = require('../models/campaign');
 
@@ -13,7 +15,13 @@ module.exports = function (app) {
 router.use(ensureAuthenticated);
 
 router.get('/profile', (req, res) => {
-  res.render('profile', {user: req.user});
+  User.findById(req.user._id).populate(['administrated_companies', 'donations', 'created_campaigns']).exec()
+    .then((person) => {
+      return res.render('profile', {user: req.user, 'profile': person});
+    })
+    .catch((err) => {
+      return next(err);
+    });
 });
 
 
@@ -26,10 +34,16 @@ router.get('/campaign', (req, res) => {
 });
 
 router.post('/campaign', (req, res, next) => {
+  req.body.creators = [];
+  req.body.creators.push(req.user._id);
   Campaign.create(req.body)
-    .then((data) => {
-      return res.json(data);
-    }).catch((err) => {
+    .then((campaign) => {
+      return User.update({'_id': req.user._id}, {$push: {'created_campaigns': campaign._id}});
+    })
+    .then((update) => {
+      return res.json(update);
+    })
+    .catch((err) => {
       return next(err);
     });
 });
@@ -38,10 +52,16 @@ router.post('/campaign', (req, res, next) => {
 
 
 router.post('/company', (req, res, next) => {
+  req.body.admins = [];
+  req.body.admins.push(req.user._id);
   Company.create(req.body)
-    .then((data) => {
-      return res.json(data);
-    }).catch((err) => {
+    .then((company) => {
+      return Person.update({'_id': req.user._id}, {$push: {'administrated_companies': company._id}});
+    })
+    .then((update) => {
+      return res.json(update);
+    })
+    .catch((err) => {
       return next(err);
     });
 });
