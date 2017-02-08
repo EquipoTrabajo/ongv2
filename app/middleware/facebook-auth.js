@@ -10,11 +10,27 @@ const fbStrategy = new Strategy({
   },
   function(accessToken, refreshToken, profile, callback) {
     Person.findOne({ 'facebookid' : profile.id }).exec()
-      .then((data) => {
+      .then((person) => {
         let response = profile._json;
         let address= response.location.name.split(',');
-        if(data){
-          return callback(null, data);
+        if(person){
+          //return callback(null, person);
+          person.name = response.first_name + ' ' + response.middle_name + ' ' + response.last_name;
+          person.profile_picture = response.picture.data.url;
+          person.cover_picture = response.cover.source;
+          person.address['city'] = address[0];
+          person.address['state'] = address[1];
+          person.address['country'] = address[2];
+          person.facebookid = response.id;
+          person.followed_people = response.friends.data;
+          person.likes_fb = JSON.stringify(response.likes.data);
+          
+          person.save((err, result) => {
+            if (err) {
+              return callback(err);
+            }
+            return callback(null, person);
+          });
         } else {
           let person = new Person(
             {
