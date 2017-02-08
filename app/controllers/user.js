@@ -8,6 +8,9 @@ var express = require('express'),
   Comment = require('../models/comment'),
   Campaign = require('../models/campaign');
 
+var fs = require('fs');
+var path = require('path');
+
 module.exports = function (app) {
   app.use('/', router);
 };
@@ -110,16 +113,21 @@ router.post('/campaign', (req, res, next) => {
 
 
 router.put('/campaign/:idCampaign/like', (req, res, next) => {
-  Campaign.update({'_id': req.params.idCampaign}, {$push: {'likes': req.params.idUser }})
-    .then((data) => {
-      return res.json(data);
-    }).catch((err) => {
+  //Person.find({'_id': req.user._id, 'liked_campaigns': req.params.idCampaign })
+  Campaign.update({'_id': req.params.idCampaign}, {$push: {'likes': req.user._id }})
+    .then((crslt) => {
+      return Person.update({'_id': req.user._id}, {$push: {'liked_campaigns': req.params.idCampaign}}).exec();
+    })
+    .then((prslt) => {
+      return res.json(prslt);
+    })
+    .catch((err) => {
       return next(err);
     });
 });
 
 router.put('/campaign/:idCampaign/dislike', (req, res, next) => {
-  Campaign.update({'_id': req.params.idCampaign}, {$push: {'dislikes': req.params.idUser }})
+  Campaign.update({'_id': req.params.idCampaign}, {$push: {'dislikes': req.user._id }})
     .then((data) => {
       return res.json(data);
     }).catch((err) => {
@@ -129,7 +137,7 @@ router.put('/campaign/:idCampaign/dislike', (req, res, next) => {
 
 
 router.put('/campaign/:idCampaign/share', (req, res, next) => {
-  Campaign.update({'_id': req.params.idCampaign}, {$push: {'shares': req.params.idUser }})
+  Campaign.update({'_id': req.params.idCampaign}, {$push: {'shares': req.user._id }})
     .then((data) => {
       return res.json(data);
     }).catch((err) => {
@@ -183,3 +191,33 @@ router.post('/campaign/:idCampaign/comment', (req, res, next) => {
       return next(err);
     });
 });
+
+router.post('/campaign/:idCampaign/upload_picture', function (req, res) {
+  let fstream;
+  let text = '';
+  req.pipe(req.busboy);
+  req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+    text = val;
+  });
+  req.busboy.on('file', function (fieldname, file, filename) {
+
+    //Path where image will be uploaded
+    fstream = fs.createWriteStream(path.resolve('./public/uploads/images/') + '/' + filename);
+    file.pipe(fstream);
+    fstream.on('close', function () {
+      let media = {
+        'picture': filename,
+        'text': text
+      }
+
+      Campaign.update({'_id': req.params.idCampaign}, {$push: {'updates': media}}).exec()
+        .then((curslt) => {
+          return res.json(curslt);
+        })
+        .catch((err) => {
+          return next(err);
+        });
+    });
+  });
+});
+

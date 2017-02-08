@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var compress = require('compression');
 var methodOverride = require('method-override');
 var passport = require('passport');
+var busboy = require('connect-busboy');
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
@@ -34,6 +35,8 @@ module.exports = function(app, config) {
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.use(busboy());
 
   var controllers = glob.sync(config.root + '/app/controllers/*.js');
   controllers.forEach(function (controller) {
