@@ -24,9 +24,10 @@ router.get('/home', (req, res, next) => {
       if (err) {
         next(err);
       }
+      console.log(req.user.address.city);
       Campaign.getNearbyCampaigns(req.user.address.city, (err, nearbyCampaigns) => {
         if (err) {
-          next(err);
+          throw err;
         }
         res.render('home', {user: req.user, allCampaigns: allCampaigns, recommendedCampaigns: recommendedCampaigns, nearbyCampaigns: nearbyCampaigns});
       });

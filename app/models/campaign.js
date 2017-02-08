@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 var Person = require('./person');
 
@@ -161,13 +162,12 @@ module.exports.getRecommendedCampaigns = (id, callback) => {
           creators.push(campaigns[camp].creators[i]);
         }
       }
-      Campaign.find({'creators': {$in: creators}, '_id': {$nin: tempCampId}, 'priority': {$gt: 0}, 'start_date': {$lt: Date.now()}, 'end_date': {$gt: Date.now()}}, callback);
+      Campaign.find({'creators': {$in: creators}, '_id': {$nin: tempCampId}, 'priority': {$gt: 0}, 'start_date': {$lt: moment(Date.now()).format()}, 'end_date': {$gt: moment(Date.now()).format()}}, callback);
     });
   });
 }
 
 
 module.exports.getNearbyCampaigns = function (user, callback) {
-  console.log(Date.now());
-  Campaign.find({'address.city': user, 'start_date': {$lt: Date()}, 'end_date': {$gt: Date()}}).exec(callback);
+  Campaign.find({'address.city': user}).exec(callback);
 }

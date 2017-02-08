@@ -16,7 +16,7 @@ passport.deserializeUser(function(obj, cb) {
 });
 
 router.get('/login/facebook',
-  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_birthday', 'user_likes', 'user_location', 'user_photos', 'user_education_history'] }));
+  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'user_birthday', 'user_likes', 'user_location', 'user_education_history'] }));
 
 router.get('/login/facebook/return', 
   passport.authenticate('facebook', { failureRedirect: '/login' }),

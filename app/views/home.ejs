@@ -107,12 +107,12 @@
                 </thead>
                 <tbody>
                 <% if (false) {%>
-                  <% for(var i=0; i< profile.nearbyCampaigns.length; i++) { %>
+                  <% for(var i=0; i< nearbyCampaigns.length; i++) { %>
                     <tr>
-                      <th scope="row"><a href="/campaigns/<%= profile.nearbyCampaigns[i]._id %>"><%= profile.nearbyCampaigns[i].name %></a></th>
-                      <td><%= profile.nearbyCampaigns[i].start_date %></td>
-                      <td><%= profile.nearbyCampaigns[i].end_date %></td>
-                      <td><%= profile.nearbyCampaigns[i].category %></td>
+                      <th scope="row"><a href="/campaigns/<%= nearbyCampaigns[i]._id %>"><%= nearbyCampaigns[i].name %></a></th>
+                      <td><%= nearbyCampaigns[i].start_date %></td>
+                      <td><%= nearbyCampaigns[i].end_date %></td>
+                      <td><%= nearbyCampaigns[i].category %></td>
                     </tr>
                   <% } %>
                 <% } %>

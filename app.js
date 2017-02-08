@@ -5,6 +5,8 @@ var express = require('express'),
   glob = require('glob'),
   mongoose = require('mongoose');
 
+var moment = require('moment');
+
 mongoose.Promise = global.Promise;
 mongoose.connect(config.db);
 var db = mongoose.connection;
@@ -22,5 +24,6 @@ module.exports = require('./config/express')(app, config);
 
 app.listen(config.port, function () {
   console.log('Express server listening on port ' + config.port);
+  console.log(Date());
 });
 

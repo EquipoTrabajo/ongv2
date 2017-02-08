@@ -13,10 +13,16 @@ var personSchema = new Schema({
   slogan: {
     type: String
   },
+  birthday: {
+    type: Date
+  },
   gender: {
     type: String
   },
   email: {
+    type: String
+  },
+  likes_fb: {
     type: String
   },
   friend_list: [{

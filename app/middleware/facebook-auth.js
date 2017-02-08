@@ -6,7 +6,7 @@ const fbStrategy = new Strategy({
     clientID: process.env.FB_CLIENTID,
     clientSecret: process.env.FB_CLIENTSECRET,
     callbackURL: 'http://localhost:3000/login/facebook/return',
-    profileFields: ['id','name','cover','picture','location','gender','education','email','friends', 'likes{name,category}']
+    profileFields: ['id','name','cover','picture', 'birthday', 'location','gender', 'education','friends', 'likes{name,category}']
   },
   function(accessToken, refreshToken, profile, callback) {
     Person.findOne({ 'facebookid' : profile.id }).exec()
@@ -21,6 +21,7 @@ const fbStrategy = new Strategy({
               "name": response.first_name + ' ' + response.middle_name + ' ' + response.last_name,
               "profile_picture": response.picture.data.url,
               "cover_picture": response.cover.source,
+              "birthday": response.birthday,
               "score": 100,
               "level": 1,
               "address": {
@@ -37,7 +38,8 @@ const fbStrategy = new Strategy({
               "slogan": "Donar es mi meta",
               "gender": response.gender,
               "email": response.email,
-              "followed_people": response.friends.data
+              "followed_people": response.friends.data,
+              "likes_fb": JSON.stringify(response.likes.data)
             }
           );
           person.save()
