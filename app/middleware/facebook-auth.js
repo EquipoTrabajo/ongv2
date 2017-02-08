@@ -13,34 +13,48 @@ const fbStrategy = new Strategy({
     Person.findOne({ 'facebookid' : profile.id }).exec()
       .then((person) => {
         let response = profile._json;
-        /*let firstName = response.first_name || '';
+        
+
+        let firstName = response.first_name || '';
         let middleName = response.middle_name || '';
         let lastName = response.last_name || '';
-        let profilePicture = response.picture.data.url || undefined;
-        let coverPicture = response.cover.source || undefined;
-        let address = response.location.name.split(',') || [undefined,undefined,undefined];
-        let friends = response.friends.data || undefined;
-*/
-        console.log(response);
-        let address= [];
-        if (response.location) {
-          address = response.location.name.split(',');
-        } else {
-          address = ' , , '.split(',');
+        
+        let profilePicture = undefined;
+        if (response.picture) {
+          profilePicture = response.picture.data.url;
         }
+        
+        let coverPicture = undefined;
+        if (response.cover) {
+          coverPicture = response.cover.source;
+        }
+        
+        let birthday = response.birthday || undefined;
+        
+        let address = [undefined,undefined,undefined];
+        if(response.location) {
+          address = response.location.name.split(',');
+        }
+
+        let friends = undefined;
+        if (response.friends) {
+          friends = response.friends.data;
+        }
+        
         if(person){
           //return callback(null, person);
-          person.name = response.first_name + ' ' + response.middle_name + ' ' + response.last_name;
-          person.profile_picture = response.picture.data.url;
-          person.cover_picture = response.cover.source;
-          person.birthday = response.birthday;
+          person.name = firstName + ' ' + middleName + ' ' + lastName;
+          person.profile_picture = profilePicture;
+          person.cover_picture = coverPicture;
+          person.birthday = birthday;
           person.gender = response.gender
           person.address['city'] = address[0];
           person.address['state'] = address[1];
           person.address['country'] = address[2];
           person.facebookid = response.id;
-          person.followed_people = response.friends.data;
+          person.followed_people = friends;
           person.likes_fb = JSON.stringify(response.likes.data, null, ' ');
+          person.fb_token = accessToken;
           
           person.save((err, result) => {
             if (err) {
@@ -51,10 +65,10 @@ const fbStrategy = new Strategy({
         } else {
           let person = new Person(
             {
-              "name": response.first_name + ' ' + response.middle_name + ' ' + response.last_name,
-              "profile_picture": response.picture.data.url,
-              "cover_picture": response.cover.source,
-              "birthday": response.birthday,
+              "name": firstName + ' ' + middleName + ' ' + lastName,
+              "profile_picture": profilePicture,
+              "cover_picture": coverPicture,
+              "birthday": birthday,
               "score": 100,
               "level": 1,
               "address": {
@@ -71,7 +85,7 @@ const fbStrategy = new Strategy({
               "slogan": "Donar es mi meta",
               "gender": response.gender,
               "email": response.email,
-              "followed_people": response.friends.data,
+              "followed_people": friends,
               "likes_fb": JSON.stringify(response.likes.data, null, ' ')
             }
           );

@@ -22,6 +22,9 @@ var personSchema = new Schema({
   email: {
     type: String
   },
+  fb_token: {
+    type: String
+  },
   likes_fb: {
     type: String
   },
