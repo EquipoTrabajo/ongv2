@@ -13,15 +13,9 @@ module.exports = function (app) {
 };
 
 router.get('/campaigns/:idCampaign', (req, res, next) => {
-  /*Campaign.findById(req.params.idCampaign).populate(['comments', 'donations.user']).exec()
-    .then((data) => {
-      return res.render('view-campaign', {'user': req.user, 'campaign': data});
-    })
-    .catch((err) => {
-      return next(err);
-    });*/
   let campaignPromise = new Promise((resolve, reject) => {
-    Campaign.findById(req.params.idCampaign).populate(['comments', 'donations.user']).exec((err, campaigns) => {
+    Campaign.findById(req.params.idCampaign).populate(['comments', 'donations.user', 'updates.comment']).exec((err, campaigns) => {
+      console.log(JSON.stringify(campaigns, null, ' '));
       if (err) {
         reject(err);
       }

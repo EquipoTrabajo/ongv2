@@ -20,23 +20,85 @@ router.use(ensureAuthenticated);
 
 
 router.get('/home', (req, res, next) => {
-  Campaign.find().exec((err, allCampaigns) => {
-    if(err){
-      next(err);
-    }
-    Campaign.getRecommendedCampaigns(req.user._id, (err, recommendedCampaigns) => {
+  
+  let personPromise = new Promise((resolve, reject) => {
+    Person.findById(req.user._id).exec((err, person) => {
       if (err) {
-        next(err);
+        reject(err);
+      } else {
+        resolve(person)
       }
-      console.log(req.user.address.city);
-      Campaign.getNearbyCampaigns(req.user.address.city, (err, nearbyCampaigns) => {
-        if (err) {
-          throw err;
-        }
-        res.render('home', {user: req.user, allCampaigns: allCampaigns, recommendedCampaigns: recommendedCampaigns, nearbyCampaigns: nearbyCampaigns});
-      });
     });
   });
+
+  let idCampaignsPromise = new Promise((resolve, reject) => {
+    personPromise
+      .then((person) => {
+        return Campaign.find({'_id': {$in: person.liked_campaigns}}, (err, campaigns) => {
+          if (err) {
+            reject(err);
+          } else {
+            let creators = [];
+            let tempCampId = [];
+            for(let camp in campaigns) {
+              tempCampId.push(campaigns[camp]._id);
+              for(let i=0; i<campaigns[camp].creators.length; i++) {
+                creators.push(campaigns[camp].creators[i]);
+              }
+            }
+            resolve({'idCampaigns': tempCampId, 'creators': creators});
+          }
+        });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+
+  let recommendedCampaignsPromise = new Promise((resolve, reject) => {
+    idCampaignsPromise
+      .then((idCampaigns) => {
+        Campaign.find({'creators': {$in: idCampaigns.creators}, '_id': {$nin: idCampaigns.tempCampId}, 'priority': {$gt: 0}}).exec((err, recommendedCampaigns) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(recommendedCampaigns);
+          }
+        });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+
+  let allCampaignsPromise = new Promise((resolve, reject) => {
+    Campaign.find().exec((err, allCampaigns) => {
+      if(err){
+        reject(err);
+      } else {
+        resolve(allCampaigns);
+      }
+    });
+  });
+
+  let nearbyCampaignsPromise = new Promise((resolve, reject) => {
+    Campaign.find({'address.city': req.user.address.city}).exec((err, nearbyCampaigns) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(nearbyCampaigns);
+      }
+    });
+  });
+
+  Promise.all([allCampaignsPromise, nearbyCampaignsPromise, recommendedCampaignsPromise])
+    .then((values) => {
+      console.log(JSON.stringify(values, null, ' '));
+      res.render('home', {'user': req.user, 'allCampaigns': values[0], 'recommendedCampaigns': values[2], 'nearbyCampaigns': values[1]});
+    })
+    .catch((err) => {
+      return next(err);
+    });
 });
 
 
@@ -90,8 +152,27 @@ router.get('/company/:username', (req, res, next) => {
     });
 });
 
+router.get('/profile/media', (req, res) => {
+  let mediaPromise = new Promise((resolve, reject) => {
+    Media.find({'person': req.user._id}).exec((err, medias) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(medias);
+    })
+  });
+  mediaPromise
+    .then((medias) => {
+      return res.render('view-media', {user: req.user, 'media': medias});
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
 
 /*********CAMPAIGN********/
+
 
 router.get('/campaign', (req, res) => {
   res.render('add-campaign', {user: req.user});
@@ -225,7 +306,20 @@ router.post('/campaign/:idCampaign/update', function (req, res, next) {
   });
 });
 
-//TODO
+
+router.post('/update/:idUpdate/comment', function (req, res, next) {
+  Comment.create({'text': req.body.text, 'user': req.user._id})
+    .then((comment) => {
+      return Campaign.update({'updates._id': req.params.idUpdate}, {$push: {'updates.$.comment': comment._id}});
+    })
+    .then((update) => {
+      return res.json(update);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
 router.post('/campaign/:idCampaign/media', function (req, res, next) {
   let fstream;
   let description = '';

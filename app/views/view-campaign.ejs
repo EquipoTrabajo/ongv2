@@ -140,6 +140,24 @@
                 <img src="/uploads/images/<%= campaign.updates[i].picture %>" class="img-responsive">
                 <hr>
                 <small><%= campaign.updates[i].created_at %></small>
+                <hr>
+                <% if (true) {%>
+                <% for(var j=0; j<campaign.updates[i].comment.length; j++) { %>
+                  <div class="well">
+                    <h4><%= campaign.updates[i].comment[j].user %> <small><%= campaign.updates[i].comment[j].created_at %></small> </h4>
+                    <p class="bg-info"><%= campaign.updates[i].comment[j].text %></p>
+                  </div>
+                <%}%>
+                <%}%>
+                <hr>
+                <% if (user) { %>
+                <form method="post" id="formComment" action="/update/<%= campaign.updates[i]._id %>/comment">
+                  <div class="form-group">
+                    <textarea class="form-control" name="text" id="textComment" rows="3"></textarea>
+                  </div>
+                  <input type="submit" class="btn btn-primary" value="Comentar"/>
+                </form>
+              <% } %>
               </div>
             </div>
             <% } %>

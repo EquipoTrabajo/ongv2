@@ -12,7 +12,7 @@
               </a>
             </li>
             <li>
-              <a href="" id="changeProfilePicture"><img src="<%= company.profile_picture %>" alt="..." class="img-circle profile_img"></a>
+              <a href="" id="changeProfilePicture"><img src="/uploads/images/<%= company.profile_picture %>" alt="..." class="img-circle profile_img"></a>
               <form action="POST" enctype="multipart/form-data" style="display: none;" id="formProfilePicture">
                 <input type="file" name="profilePicture" id="profilePicture">
                 <input type="submit">
