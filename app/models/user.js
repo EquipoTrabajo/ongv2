@@ -44,6 +44,12 @@ var userSchema = new Schema({
     amount: {
       type: Number
     },
+    state: {
+      type: String
+    },
+    name: {
+      type: String
+    },
     campaign: {
       type: Schema.Types.ObjectId, ref: 'Campaign'
     },

@@ -91,6 +91,12 @@ var campaignSchema = new Schema({
     amount: {
       type: Number
     },
+    state: {
+      type: String
+    },
+    name: {
+      type: String
+    },
     user: {
       type: Schema.Types.ObjectId, ref: 'User'
     },

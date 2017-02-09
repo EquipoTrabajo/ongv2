@@ -6,6 +6,7 @@ var express = require('express'),
   Person = require('../models/person'),
   User = require('../models/user'),
   Comment = require('../models/comment'),
+  Media = require('../models/media'),
   Campaign = require('../models/campaign');
 
 var fs = require('fs');
@@ -149,11 +150,14 @@ router.put('/campaign/:idCampaign/share', (req, res, next) => {
 router.put('/campaign/:idCampaign/donate', (req, res, next) => {
   Campaign.update({'_id': req.params.idCampaign}, {$push: {'donations': {
     amount: req.body.amount,
+    state: req.body.state,
     user: req.user._id
   }}})
     .then((donation) => {
       return User.update({'_id': req.user._id}, {$push: {'donations': {
         amount: req.body.amount,
+        state: req.body.state,
+        name: req.user.name,
         campaign: req.params.idCampaign
       }}});
     })
@@ -192,7 +196,7 @@ router.post('/campaign/:idCampaign/comment', (req, res, next) => {
     });
 });
 
-router.post('/campaign/:idCampaign/upload_picture', function (req, res) {
+router.post('/campaign/:idCampaign/update', function (req, res, next) {
   let fstream;
   let text = '';
   req.pipe(req.busboy);
@@ -212,7 +216,42 @@ router.post('/campaign/:idCampaign/upload_picture', function (req, res) {
 
       Campaign.update({'_id': req.params.idCampaign}, {$push: {'updates': media}}).exec()
         .then((curslt) => {
-          return res.json(curslt);
+          return res.redirect('/campaigns/' + req.params.idCampaign);
+        })
+        .catch((err) => {
+          return next(err);
+        });
+    });
+  });
+});
+
+//TODO
+router.post('/campaign/:idCampaign/media', function (req, res, next) {
+  let fstream;
+  let description = '';
+  req.pipe(req.busboy);
+  req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+    description = val;
+  });
+  req.busboy.on('file', function (fieldname, file, filename) {
+
+    //Path where image will be uploaded
+    fstream = fs.createWriteStream(path.resolve('./public/uploads/images/') + '/' + filename);
+    file.pipe(fstream);
+    fstream.on('close', function () {
+      let media = {
+        'url': filename,
+        'person_name': req.user.name,
+        'person': req.user._id,
+        'campaign': req.params.idCampaign,
+        'description': description
+      };
+      Media.create(media)
+        .then((media) => {
+          return Campaign.update({'_id': req.params.idCampaign}, {$push: {'pictures': media}}).exec();
+        })
+        .then((ucrslt) => {
+          return res.redirect('/campaigns/' + req.params.idCampaign);
         })
         .catch((err) => {
           return next(err);
