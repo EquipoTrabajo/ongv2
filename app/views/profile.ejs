@@ -100,6 +100,7 @@
                           <th>Fecha Inicio</th>
                           <th>Fecha Fin</th>
                           <th>Categoría</th>
+                          <th>Editar</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -109,6 +110,11 @@
                             <td><%= profile.created_campaigns[i].start_date %></td>
                             <td><%= profile.created_campaigns[i].end_date %></td>
                             <td><%= profile.created_campaigns[i].category %></td>
+                            <td>
+                              <a href="/campaign/<%= profile.created_campaigns[i]._id %>/edit" class="btn btn-xs btn-primary edit">
+                                <span class="glyphicon glyphicon-edit"></span>
+                              </a>
+                            </td>
                           </tr>
                         <% } %>
                       </tbody>

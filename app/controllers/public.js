@@ -15,7 +15,6 @@ module.exports = function (app) {
 router.get('/campaigns/:idCampaign', (req, res, next) => {
   let campaignPromise = new Promise((resolve, reject) => {
     Campaign.findById(req.params.idCampaign).populate(['comments', 'donations.user', 'updates.comment']).exec((err, campaigns) => {
-      console.log(JSON.stringify(campaigns, null, ' '));
       if (err) {
         reject(err);
       }

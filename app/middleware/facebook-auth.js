@@ -10,6 +10,7 @@ const fbStrategy = new Strategy({
     profileURL: 'https://graph.facebook.com/v2.8/me'
   },
   function(accessToken, refreshToken, profile, callback) {
+    //console.log(JSON.stringify(profile, null, ' '));
     Person.findOne({ 'facebookid' : profile.id }).exec()
       .then((person) => {
         let response = profile._json;

@@ -93,7 +93,6 @@ router.get('/home', (req, res, next) => {
 
   Promise.all([allCampaignsPromise, nearbyCampaignsPromise, recommendedCampaignsPromise])
     .then((values) => {
-      console.log(JSON.stringify(values, null, ' '));
       res.render('home', {'user': req.user, 'allCampaigns': values[0], 'recommendedCampaigns': values[2], 'nearbyCampaigns': values[1]});
     })
     .catch((err) => {
@@ -113,6 +112,17 @@ router.get('/profile', (req, res) => {
     .then((person) => {
       return res.render('profile', {user: req.user, 'profile': person});
       //return res.json(person);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+router.post('/search/person', (req, res, next) => {
+  console.log(req.body.name);
+  Person.find({'name': {$regex: req.body.name}}).exec()
+    .then((persons) => {
+      return res.json(persons);
     })
     .catch((err) => {
       return next(err);
@@ -151,6 +161,23 @@ router.get('/company/:username', (req, res, next) => {
       return next(err);
     });
 });
+
+//Make Admin
+router.post('/company/:idCompany/person/:idPerson/add-admin', function (req, res, next) {
+
+  Company.update({'_id': req.params.idCompany}, {$push: {'admins': req.params.idPerson}}).exec()
+    .then((company) => {
+      return Person.update({'_id': req.params.idPerson}, {$push: {'administrated_companies': req.params.idCompany}}).exec();
+    })
+    .then((prslt) => {
+      return res.json(prslt);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+
 
 router.get('/profile/media', (req, res) => {
   let mediaPromise = new Promise((resolve, reject) => {
@@ -193,6 +220,26 @@ router.post('/campaign', (req, res, next) => {
     });
 });
 
+
+router.get('/campaign/:idCampaign/edit', (req, res, next) => {
+  Campaign.findById(req.params.idCampaign).exec()
+    .then((campaign) => {
+      return res.render('edit-campaign', {'user': req.user, 'campaign': campaign});
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+router.put('/campaign/:idCampaign', (req, res, next) => {
+  Campaign.update({'_id': req.params.idCampaign}, req.body, {upsert: true}).exec()
+    .then((campaign) => {
+      return res.json(campaign);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
 
 router.put('/campaign/:idCampaign/like', (req, res, next) => {
   //Person.find({'_id': req.user._id, 'liked_campaigns': req.params.idCampaign })

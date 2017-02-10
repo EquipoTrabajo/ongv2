@@ -41,6 +41,53 @@
     </div>
   </div>
 
+<div class="col-md-6 col-sm-6 col-xs-12">
+  <div class="x_panel">
+    <form class="form-inline" id="frmSearchUser">
+      <div class="form-group">
+        <label for="searchUser">Name</label>
+        <input type="text" class="form-control" name="name" id="searchUser" placeholder="Jane Doe">
+      </div>
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <div class="x_title">
+      <h2> Users <small>basic table subtitle</small></h2>
+      <ul class="nav navbar-right panel_toolbox">
+        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Settings 1</a>
+            </li>
+            <li><a href="#">Settings 2</a>
+            </li>
+          </ul>
+        </li>
+        <li><a class="close-link"><i class="fa fa-close"></i></a>
+        </li>
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Foto</th>
+            <th>Username</th>
+            <th>?</th>
+          </tr>
+        </thead>
+        <tbody id="resultsPerson">
+          
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
   <script>
     $(document).ready(function () {
 
@@ -68,6 +115,28 @@
             }
         });
       });*/
+
+      $('#frmSearchUser').submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+          url: '/search/person',
+          data: $('#frmSearchUser').serialize(),
+          type: 'POST',
+          success: function(data){
+            for(var key in data) {
+              $('#resultsPerson').append('<tr><th scope="row">' + data[key].name + '</th><td><img src="' + data[key].profile_picture + '" class="img-circle img-responsive"></td><td>' + data[key].username + '</td><td><button type="button" class="btn btn-xs btn-primary addAdmin" data-idCompany="<%= company._id %>" data-idPerson= "' + data[key]._id + '"><span class="glyphicon glyphicon-plus"></span></button></td></tr>');
+            }
+            $('.addAdmin').click(function (event) {
+              console.log('hice click');
+              if(window.confirm("¿Estás Seguro?")){
+                $.post("/company/" + $(this).attr('data-idCompany') + "/person/" + $(this).attr('data-idPerson') + "/add-admin", function (data) {
+                  console.log('done');
+                });
+              }
+            });
+          }
+        });
+      });
     });
   </script>
 
