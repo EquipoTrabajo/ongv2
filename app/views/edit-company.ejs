@@ -1,0 +1,147 @@
+<% include header %>
+  <% include nav %>
+   <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title">Empresa</div>
+        </div>  
+        <div class="panel-body" >
+          <form id="add-company" method="post" action=".">
+            <input type='hidden' name='csrfmiddlewaretoken' value='XFe2rTYl9WOpV8U6X5CfbIuOZOELJ97S' />
+            <input type='hidden' name='score' value='100' />
+            <div id="div_id_username" class="form-group required">
+                <label for="name" class="control-label col-md-4  requiredField"> Nombre <span class="asteriskField">*</span> </label>
+                <div class="controls col-md-8 ">
+                    <input class="input-md  textinput textInput form-control" id="name" maxlength="30" name="name" placeholder="Nombre de la empresa" style="margin-bottom: 10px" type="text" value="<%= company.name %>" />
+                </div>
+            </div>
+            <div id="div_id_password2" class="form-group required">
+                 <label for="username" class="control-label col-md-4  requiredField"> Nombre de Usuario<span class="asteriskField">*</span> </label>
+                 <div class="controls col-md-8 ">
+                    <input class="input-md textinput textInput form-control" id="username" name="username" placeholder="Nombre de usuario" style="margin-bottom: 10px" type="text" value="<%= company.username %>" />
+                </div>
+            </div>
+            <div id="div_id_name" class="form-group required"> 
+                <label for="slogan" class="control-label col-md-4  requiredField">Frase<span class="asteriskField">*</span> </label> 
+                <div class="controls col-md-8 "> 
+                    <input class="input-md textinput textInput form-control" id="slogan" name="slogan" placeholder="Escriba la frase que idenfique a su empresa" style="margin-bottom: 10px" type="text" value="<%= company.slogan %>" />
+                </div>
+            </div>
+            <div id="div_id_company" class="form-group required"> 
+                <label for="description" class="control-label col-md-4  requiredField"> Descripción<span class="asteriskField">*</span> </label>
+                <div class="controls col-md-8 "> 
+                     <input class="input-md textinput textInput form-control" id="description" name="description" placeholder="Descripción de la empresa" style="margin-bottom: 10px" type="text" value="<%= company.description %>" />
+                </div>
+            </div> 
+            <div id="div_id_number" class="form-group required">
+                 <label for="user.address.city" class="control-label col-md-4  requiredField"> Ciudad<span class="asteriskField">*</span> </label>
+                 <div class="controls col-md-8 ">
+                     <input class="input-md textinput textInput form-control" id="address.city" name="address[city]" placeholder="Ciudad de la campaña" style="margin-bottom: 10px" type="text" value="<%= company.address.city %>" />
+                </div> 
+            </div> 
+            <div id="div_id_location" class="form-group required">
+                <label for="address.state" class="control-label col-md-4  requiredField"> Estado<span class="asteriskField">*</span> </label>
+                <div class="controls col-md-8 ">
+                    <input class="input-md textinput textInput form-control" id="address[state]" name="address[state]" placeholder="Estado de la campaña" style="margin-bottom: 10px" type="text" value="<%= company.address.state %>" />
+                </div> 
+            </div> 
+            <div id="div_id_location" class="form-group required">
+                <label for="user.address.country" class="control-label col-md-4  requiredField"> País<span class="asteriskField">*</span> </label>
+                <div class="controls col-md-8 ">
+                    <input class="input-md textinput textInput form-control" id="address.country" name="address[country]" placeholder="País de la campaña" style="margin-bottom: 10px" type="text" value="<%= company.address.country %>" />
+                </div> 
+            </div> 
+            <div class="form-group"> 
+                <div class="aab controls col-md-4 "></div>
+                <div class="controls col-md-8 ">
+                    <input type="submit" name="send" value="Guardar" class="btn btn-primary btn btn-info" id="send" />
+                </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+  </div> 
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $( "#add-company" ).submit(function( event ) {
+      event.preventDefault();
+      var company = {};
+      $('#add-company').serializeArray().map(function(x){company[x.name] = x.value;});
+
+      arrangeJson(company);
+      console.log(JSON.stringify(company, null, ' '));
+      $.ajax({
+        type: "PUT",
+        url: "/company/<%= company._id %>",
+        data: JSON.stringify(company),
+        success: function (data) {
+          // window.location.href = "/company/" + data.username;
+          window.location.href = "/profile";
+        },
+        error: function (err) {
+          console.log(err);
+        },
+        contentType: "application/json",
+        dataType: "json"
+      });
+    });
+
+  });
+
+  function arrangeJson(data){
+    var initMatch = /^([a-z0-9]+?)\[/i;
+    var first = /^\[[a-z0-9]+?\]/i;
+    var isNumber = /^[0-9]$/;
+    var bracers = /[\[\]]/g;
+    var splitter = /\]\[|\[|\]/g;
+
+    for(var key in data) {
+      if(initMatch.test(key)){
+        data[key.replace(initMatch,'[$1][')] = data[key];
+      }
+      else{
+        data[key.replace(/^(.+)$/,'[$1]')] = data[key];
+      }
+      delete data[key];
+    }
+
+
+    for (var key in data) {
+      processExpression(data, key, data[key]);
+      delete data[key];
+    }
+
+    function processExpression(dataNode, key, value){
+      var e = key.split(splitter);
+      if(e){
+        var e2 =[];
+        for (var i = 0; i < e.length; i++) {
+          if(e[i]!==''){e2.push(e[i]);} 
+        }
+        e = e2;
+        if(e.length > 1){
+          var x = e[0];
+          var target = dataNode[x];
+          if(!target){
+            if(isNumber.test(e[1])){
+              dataNode[x] = [];
+            }
+            else{
+              dataNode[x] ={}
+            }
+          }
+          processExpression(dataNode[x], key.replace(first,''), value);
+        } else if(e.length == 1){
+          dataNode[e[0]] = value;
+        } else{
+          alert('This should not happen...');
+        }
+      }
+    }
+  }
+</script>
+
+<% include footer %>

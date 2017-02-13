@@ -124,7 +124,7 @@
           type: 'POST',
           success: function(data){
             for(var key in data) {
-              $('#resultsPerson').append('<tr><th scope="row">' + data[key].name + '</th><td><img src="' + data[key].profile_picture + '" class="img-circle img-responsive"></td><td>' + data[key].username + '</td><td><button type="button" class="btn btn-xs btn-primary addAdmin" data-idCompany="<%= company._id %>" data-idPerson= "' + data[key]._id + '"><span class="glyphicon glyphicon-plus"></span></button></td></tr>');
+              $('#resultsPerson').append('<tr><th scope="row"><a href="/person/' + data[key].username + '">' + data[key].name + '</a></th><td><img src="' + data[key].profile_picture + '" class="img-circle img-responsive"></td><td>' + data[key].username + '</td><td><button type="button" class="btn btn-xs btn-primary addAdmin" data-idCompany="<%= company._id %>" data-idPerson= "' + data[key]._id + '"><span class="glyphicon glyphicon-plus"></span></button></td></tr>');
             }
             $('.addAdmin').click(function (event) {
               console.log('hice click');

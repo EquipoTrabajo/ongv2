@@ -129,6 +129,17 @@ router.post('/search/person', (req, res, next) => {
     });
 });
 
+router.get('/person/:username', (req, res, next) => {
+  Person.find({'username': req.params.username}).populate(['administrated_companies', 'donations.campaign', 'created_campaigns', 'volunteer_campaigns']).exec()
+    .then((person) => {
+      return res.render('view-person', {'user': req.user, 'person': person});
+      //return res.json(person);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
 
 router.get('/company', (req, res) => {
   res.render('add-company', {user: req.user});
@@ -141,6 +152,27 @@ router.post('/company', (req, res, next) => {
     .then((company) => {
       return Person.update({'_id': req.user._id}, {$push: {'administrated_companies': company._id}});
     })
+    .then((update) => {
+      return res.json(update);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+
+router.get('/company/:idCompany/edit', (req, res, next) => {
+  Company.findById(req.params.idCompany).exec()
+    .then((company) => {
+      return res.render('edit-company', {'user': req.user, 'company': company});
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+router.put('/company/:idCompany', (req, res, next) => {
+  Company.update({'_id': req.params.idCompany}, req.body, {upsert: true}).exec()
     .then((update) => {
       return res.json(update);
     })
