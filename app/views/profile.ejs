@@ -6,7 +6,7 @@
     <div class="clearfix"></div>
       <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title"><%= user.name %></h3>
+          <h3 class="panel-title"><%= profile.name %></h3>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -16,40 +16,42 @@
                 <tbody>
                   <tr>
                     <td>Usuario:</td>
-                    <td><%= user.username %></td>
+                    <td><%= profile.username %></td>
                   </tr>
                   <tr>
                     <td>Fecha de Nacimiento:</td>
-                    <td><%= user.birthday %></td>
+                    <td><%= profile.birthday %></td>
                   </tr>
                   <tr>
                     <td>Frase:</td>
-                    <td><%= user.slogan %></td>
+                    <td><%= profile.slogan %></td>
                   </tr>
                
                      <tr>
                          <tr>
                     <td>Genero: </td>
-                    <td><%= user.gender %></td>
+                    <td><%= profile.gender %></td>
                   </tr>
                     <tr>
                     <td>Dirección: </td>
-                    <td><%= user.address.city %>, <%= user.address.state %>, <%= user.address.country %></td>
+                    <td><%= profile.address.city %>, <%= profile.address.state %>, <%= profile.address.country %></td>
                   </tr>
                   <tr>
                     <td>Correo: </td>
-                    <td> <%= user.email %> </td>
+                    <td> <%= profile.email %> </td>
                   </tr>
                     <td>Puntaje: </td>
-                    <td><%= user.score %> </td>
+                    <td><%= profile.score %> </td>
                        
                   </tr>
                  
                 </tbody>
               </table>
               
+              <a href="/profile/<%= user._id %>/edit" class="btn btn-primary">Editar Perfil</a>
               <a href="/campaign" class="btn btn-primary">Crear Campaña</a>
               <a href="/company" class="btn btn-primary">Crear Empresa</a>
+              <a href="/donation-receiving-entity" class="btn btn-primary">Crear Entidad Receptora de Donaciones</a>
             </div>
           </div>
         </div>

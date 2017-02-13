@@ -4,6 +4,7 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Company = require('../models/company'),
   Person = require('../models/person'),
+  Dre = require('../models/donationReceivingEntity'),
   User = require('../models/user'),
   Comment = require('../models/comment'),
   Media = require('../models/media'),
@@ -118,6 +119,26 @@ router.get('/profile', (req, res) => {
     });
 });
 
+router.get('/profile/:idProfile/edit', (req, res, next) => {
+  Person.findById(req.params.idProfile).exec()
+    .then((person) => {
+      return res.render('edit-profile', {'user': req.user, 'person': person});
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+router.put('/profile/:idProfile', (req, res, next) => {
+  Person.findOneAndUpdate({'_id': req.params.idProfile}, req.body, {upsert: true}).exec()
+    .then((update) => {
+      return res.json(update);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
 router.post('/search/person', (req, res, next) => {
   console.log(req.body.name);
   Person.find({'name': {$regex: req.body.name}}).exec()
@@ -128,18 +149,6 @@ router.post('/search/person', (req, res, next) => {
       return next(err);
     });
 });
-
-router.get('/person/:username', (req, res, next) => {
-  Person.find({'username': req.params.username}).populate(['administrated_companies', 'donations.campaign', 'created_campaigns', 'volunteer_campaigns']).exec()
-    .then((person) => {
-      return res.render('view-person', {'user': req.user, 'person': person});
-      //return res.json(person);
-    })
-    .catch((err) => {
-      return next(err);
-    });
-});
-
 
 router.get('/company', (req, res) => {
   res.render('add-company', {user: req.user});
@@ -179,6 +188,24 @@ router.put('/company/:idCompany', (req, res, next) => {
     .catch((err) => {
       return next(err);
     });
+});
+
+router.put('/user/:idUser/profile-picture', (req, res, next) => {
+  var fstream;
+  req.pipe(req.busboy);
+  req.busboy.on('file', function (fieldname, file, filename) {
+    fstream = fs.createWriteStream(path.resolve('./public/uploads/images/') + '/' + filename);
+    file.pipe(fstream);
+    fstream.on('close', function () {   
+      User.findByIdAndUpdate(req.params.idUser, {'profile_picture': filename}).exec()
+      .then((update) => {
+        return res.json(update);
+      })
+      .catch((err) => {
+        return next(err);
+      });
+    });
+  });
 });
 
 router.get('/company/:username', (req, res, next) => {
@@ -223,6 +250,21 @@ router.get('/profile/media', (req, res) => {
   mediaPromise
     .then((medias) => {
       return res.render('view-media', {user: req.user, 'media': medias});
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+
+router.get('/donation-receiving-entity', (req, res, next) => {
+  res.render('add-donationRecivingEntity', {'user': req.user});
+});
+
+router.post('/donation-receiving-entity', (req, res, next) => {
+  Dre.create(req.body)
+    .then((dre) => {
+      return res.json(dre);
     })
     .catch((err) => {
       return next(err);
@@ -433,3 +475,14 @@ router.post('/campaign/:idCampaign/media', function (req, res, next) {
   });
 });
 
+
+router.get('/:username', (req, res, next) => {
+  Person.findOne({'username': req.params.username}).populate(['administrated_companies', 'donations.campaign', 'created_campaigns', 'volunteer_campaigns']).exec()
+    .then((person) => {
+      return res.render('view-person', {'user': req.user, 'person': person});
+      //return res.json(person);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});

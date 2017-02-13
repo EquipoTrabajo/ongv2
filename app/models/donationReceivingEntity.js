@@ -8,10 +8,10 @@ var donationReceivingEntitySchema = new Schema({
     type: String
   },
   campaign_list: [{
-    type: Schema.Types.ObjectId, ref:'Campaign'
+    type: Schema.Types.ObjectId, ref:'User'
   }],
   campaign_list_collab: [{
-    type: Schema.Types.ObjectId, ref:'Campaign'
+    type: Schema.Types.ObjectId, ref:'User'
   }],
   certificate_list_selfcampaign: [{
     type: String
@@ -33,4 +33,4 @@ var donationReceivingEntitySchema = new Schema({
   }]
 }, {discriminatorKey: 'type'});
 
-var DonationReceivingEntity = module.exports = User.discriminator('company', donationReceivingEntitySchema);
+var DonationReceivingEntity = module.exports = User.discriminator('donationReceivingEntity', donationReceivingEntitySchema);

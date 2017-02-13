@@ -1,0 +1,114 @@
+<% include header %>
+  <% include nav %>
+  <div class="container">
+    <h1>Entidad Receptora de Donaciones</h1>
+    <hr>
+    <form id="donationReceivingEntity">
+      <div class="form-group">
+        <label for="name">Nombre:</label>
+        <input type="text" name="name" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="username">Usuario:</label>
+        <input type="text" name="username" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="description">Descrición:</label>
+        <input type="text" name="description" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="address[city]">Ciudad:</label>
+        <input type="text" name="address[city]" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="address[state]">Estado:</label>
+        <input type="text" name="address[state]" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="address[country]">País:</label>
+        <input type="text" name="address[country]" class="form-control" >
+      </div>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a href="/profile" class="btn btn-default">Atras</a>
+    </form>
+  </div>
+  <script type="text/javascript">
+  $(document).ready(function () {
+    $( "#donationReceivingEntity" ).submit(function( event ) {
+      event.preventDefault();
+      var company = {};
+      $('#donationReceivingEntity').serializeArray().map(function(x){company[x.name] = x.value;});
+
+      arrangeJson(company);
+      console.log(JSON.stringify(company, null, ' '));
+      $.ajax({
+        type: "POST",
+        url: "/donation-receiving-entity",
+        data: JSON.stringify(company),
+        success: function (data) {
+          // window.location.href = "/company/" + data.username;
+          window.location.href = "/profile";
+        },
+        error: function (err) {
+          console.log(err);
+        },
+        contentType: "application/json",
+        dataType: "json"
+      });
+    });
+
+  });
+
+  function arrangeJson(data){
+    var initMatch = /^([a-z0-9]+?)\[/i;
+    var first = /^\[[a-z0-9]+?\]/i;
+    var isNumber = /^[0-9]$/;
+    var bracers = /[\[\]]/g;
+    var splitter = /\]\[|\[|\]/g;
+
+    for(var key in data) {
+      if(initMatch.test(key)){
+        data[key.replace(initMatch,'[$1][')] = data[key];
+      }
+      else{
+        data[key.replace(/^(.+)$/,'[$1]')] = data[key];
+      }
+      delete data[key];
+    }
+
+
+    for (var key in data) {
+      processExpression(data, key, data[key]);
+      delete data[key];
+    }
+
+    function processExpression(dataNode, key, value){
+      var e = key.split(splitter);
+      if(e){
+        var e2 =[];
+        for (var i = 0; i < e.length; i++) {
+          if(e[i]!==''){e2.push(e[i]);} 
+        }
+        e = e2;
+        if(e.length > 1){
+          var x = e[0];
+          var target = dataNode[x];
+          if(!target){
+            if(isNumber.test(e[1])){
+              dataNode[x] = [];
+            }
+            else{
+              dataNode[x] ={}
+            }
+          }
+          processExpression(dataNode[x], key.replace(first,''), value);
+        } else if(e.length == 1){
+          dataNode[e[0]] = value;
+        } else{
+          alert('This should not happen...');
+        }
+      }
+    }
+  }
+</script>
+<% include footer %>
