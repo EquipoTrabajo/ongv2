@@ -3,10 +3,12 @@ var Schema = mongoose.Schema;
 
 var commentSchema = new Schema({
   likes: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   dislikes: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   text: {
     type: String

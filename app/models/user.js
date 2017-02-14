@@ -61,8 +61,19 @@ var userSchema = new Schema({
   created_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign'
   }],
+  achievements: [{
+    url: {
+      type: String
+    },
+    title: {
+      type: String
+    },
+    text: {
+      type: String
+    }
+  }],
   level: {
-		type: Number
+		type: String
 	}
 }, {discriminatorKey: 'type'});
 

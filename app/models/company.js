@@ -11,7 +11,8 @@ var companySchema = new Schema({
     type: String
   },
   admins: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }]
 }, {discriminatorKey: 'type'});
 

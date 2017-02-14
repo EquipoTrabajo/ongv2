@@ -30,10 +30,12 @@ var campaignSchema = new Schema({
     default: 0
   },
   creators: [{
-    type: Schema.Types.ObjectId, ref:'User'
+    type: Schema.Types.ObjectId, ref:'User',
+    unique: true
   }],
   collaborators: [{
-    type: Schema.Types.ObjectId, ref:'User'
+    type: Schema.Types.ObjectId, ref:'User',
+    unique: true
   }],
   address: {
     city: {
@@ -73,10 +75,12 @@ var campaignSchema = new Schema({
     type: Number
   },
   likes: [{
-    type: Schema.Types.ObjectId, ref:'User'
+    type: Schema.Types.ObjectId, ref:'User',
+    unique: true
   }],
   dislikes: [{
-    type: Schema.Types.ObjectId, ref:'User'
+    type: Schema.Types.ObjectId, ref:'User',
+    unique: true
   }],
   shares: [{
     type: Schema.Types.ObjectId, ref:'User'

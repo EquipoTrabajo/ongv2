@@ -29,28 +29,35 @@ var personSchema = new Schema({
     type: String
   },
   friend_list: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   followed_people: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   followed_companies: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   administrated_companies: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   followed_receivingEntities: [{
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }],
   volunteer_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign'
   }],
   liked_campaigns: [{
-    type: Schema.Types.ObjectId, ref: 'Campaign'
+    type: Schema.Types.ObjectId, ref: 'Campaign',
+    unique: true
   }],
   seen_campaigns: [{
-    type: Schema.Types.ObjectId, ref: 'Campaign'
+    type: Schema.Types.ObjectId, ref: 'Campaign',
+    unique: true
   }],
   friends_donated_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign'

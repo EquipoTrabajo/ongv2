@@ -19,9 +19,6 @@ var donationReceivingEntitySchema = new Schema({
   certificate_list_collab_campaign: [{
     type: String
   }],
-  achievements: [{
-    type: String
-  }],
   donor_list_person: [{
     type: Schema.Types.ObjectId, ref:'User'
   }],
