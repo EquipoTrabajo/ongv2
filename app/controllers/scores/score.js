@@ -9,9 +9,9 @@ const SCORE_CREATE_CAMPAIGN = 2000;
 
 const User = require('../../models/user');
 
-module.exports.updateScore = (idUser, acction) => {
+module.exports.updateScore = (idUser, action) => {
   let acctionValue = null;
-  switch (acction) {
+  switch (action) {
     case 'donate':
       acctionValue = SCORE_DONATE;
       break;

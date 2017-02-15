@@ -11,6 +11,7 @@ var express = require('express'),
   Campaign = require('../models/campaign');
 
 const ScoreUpdate = require('../controllers/scores/score');
+const AchievementsCtrl = require('../controllers/scores/achievements');
 
 var fs = require('fs');
 var path = require('path');
@@ -291,10 +292,15 @@ router.post('/campaign', (req, res, next) => {
     .then((update) => {
       return ScoreUpdate.updateScore(req.user._id, 'create_campaign');
     })
+    .then((update) => {
+      return AchievementsCtrl.addAchievement(req.user._id, 'create_campaign');
+    })
     .then((surslt) => {
-      return res.json(surslt);
+      console.log(surslt, null, ' ');
+      return res.json('Surslt: ' + surslt);
     })
     .catch((err) => {
+      console.log('Erro: ' + err, null, ' ');
       return next(err);
     });
 });
@@ -368,6 +374,9 @@ router.put('/campaign/:idCampaign/donate', (req, res, next) => {
         campaign: req.params.idCampaign
       }}});
     })
+    .then((update) => {
+      return AchievementsCtrl.addAchievement(req.user._id, 'donate');
+    })
     .then((udonation) => {
       return ScoreUpdate.updateScore(req.user._id, 'donate');
     })
@@ -386,6 +395,9 @@ router.put('/campaign/:idCampaign/volunteer', (req, res, next) => {
     })
     .then((person) => {
       return ScoreUpdate.updateScore(req.user._id, 'volunteer');
+    })
+    .then((update) => {
+      return AchievementsCtrl.addAchievement(req.user._id, 'volunteer');
     })
     .then((score) => {
       return res.json(score);
@@ -478,11 +490,15 @@ router.post('/campaign/:idCampaign/media', function (req, res, next) {
       };
       Media.create(media)
         .then((media) => {
-          return Campaign.update({'_id': req.params.idCampaign}, {$push: {'pictures': media}}).exec();
+          return Promise.all([Campaign.update({'_id': req.params.idCampaign}, {$push: {'pictures': media._id}}).exec(), 
+                  Person.update({'_id': req.params.idCampaign}, {$push: {'pictures_upload': media._id}}).exec()]);
         })
         .then((ucrslt) => {
           return ScoreUpdate.updateScore(req.user._id, 'upload_picture');
         })
+        /*.then((ucrslt) => {
+          return AchievementsCtrl.addAchievement(req.user._id, 'media');;
+        })*/
         .then((usrslt) => {
           return res.redirect('/campaigns/' + req.params.idCampaign);
         })

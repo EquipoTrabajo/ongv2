@@ -62,6 +62,9 @@ var personSchema = new Schema({
   friends_donated_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign'
   }],
+  pictures_upload: [{
+    type: Schema.Types.ObjectId, ref: 'Media'
+  }],
   donation_certificate: [{
     type: String
   }]

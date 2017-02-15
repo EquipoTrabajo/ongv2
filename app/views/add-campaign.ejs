@@ -100,6 +100,9 @@
               // window.location.href = "/campaigns/" + data._id;
               window.location.href = "/profile";
             },
+            error: function (err) {
+              console.log(err);
+            },
             contentType: "application/json",
             dataType: "json"
           });

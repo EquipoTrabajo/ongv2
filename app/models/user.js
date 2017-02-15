@@ -68,6 +68,10 @@ var userSchema = new Schema({
     title: {
       type: String
     },
+    level: {
+      type: Number,
+      default: 1
+    },
     text: {
       type: String
     }

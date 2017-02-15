@@ -130,11 +130,13 @@
                       </thead>
                       <tbody>
                         <% for(var i=0; i< person.donations.length; i++) { %>
-                          <tr>
-                            <th scope="row"><a href="/campaigns/<%= person.donations[i].campaign._id %>"><%= person.donations[i].campaign.name %></a></th>
-                            <td><%= person.donations[i].created_at %></td>
-                            <td><%= person.donations[i].amount %></td>
-                          </tr>
+                            <% if (person.donations[i].campaign) {%>
+                            <tr>
+                              <th scope="row"><a href="/campaigns/<%= person.donations[i].campaign._id %>"><%= person.donations[i].campaign.name %></a></th>
+                              <td><%= person.donations[i].created_at %></td>
+                              <td><%= person.donations[i].amount %></td>
+                            </tr>
+                          <% } %>
                         <% } %>
                       </tbody>
                     </table>
@@ -246,13 +248,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% for(var i=0; i< person.donations.length; i++) { %>
-                          <tr>
-                            <th scope="row"><a href="/campaigns/<%= person.donations[i].campaign._id %>"><%= person.donations[i].campaign.name %></a></th>
-                            <td><%= person.donations[i].created_at %></td>
-                            <td><%= person.donations[i].amount %></td>
-                          </tr>
-                        <% } %>
+                       
                       </tbody>
                     </table>
 

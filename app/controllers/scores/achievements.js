@@ -3,27 +3,74 @@ const User = require('../../models/user');
 const Person = require('../../models/person');
 const Company = require('../../models/company');
 
+const LEVELS_PERSON = [];
+LEVELS_PERSON[0] = 'Donador Baby';
+LEVELS_PERSON[1] = 'Donador Junior';
+LEVELS_PERSON[2] = 'Donador Escudero';
+LEVELS_PERSON[3] = 'Donador Caballero';
+LEVELS_PERSON[4] = 'Donador Rey';
+LEVELS_PERSON[5] = 'Donador Baby';
 
-module.exports.addAchievement = (idUser, achievement) => {
-  let tempAchievement = {};
-  switch (achievement) {
-    case 'baby_donor':
-      tempAchievement = {
-        url: '/images/babydonor.png',
-        title: 'Baby Donador',
-        text: 'Este logro se obtiene cuando tienes más de 100 pts.'
+const LEVELS_COMPANY = [];
+LEVELS_COMPANY[0] = 'Donador Baby';
+LEVELS_COMPANY[1] = 'Responsabilidad Social Junior';
+LEVELS_COMPANY[2] = 'Resposabilidad Social Escudero';
+LEVELS_COMPANY[3] = 'Responsabilidad Social Caballero';
+LEVELS_COMPANY[4] = 'Responsabilidad social Rey';
+
+
+const ACHIEVEMENTS = [];
+ACHIEVEMENTS['help_others'] = {
+  url: 'firstcampaign.png',
+  title: 'Yo ayudo a los démas',
+  text: 'Por crear tu primera campaña o donar dinero'
+};
+
+
+
+
+module.exports.addAchievement = (idUser, action) => {
+  /*User.findById(idUser).exec()
+    .then((person) => {
+      if (person.created_campaigns.length > 0 ) {}
+    })
+    .catch((err) => {
+      return err;
+    });*/
+  User.findById(idUser).exec()
+    .then((user) => {
+      let tempAchievement = {};
+      switch (action) {
+        case 'create_campaign':
+          if (user.created_campaigns.length === 1) {
+            //user.achievements.push(ACHIEVEMENTS['help_others']);
+            return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['help_others']}}).exec();
+          } else {
+            return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+          }
+          break;
+        case 'volunteer':
+          if (user.volunteer_campaigns.length % 2 === 0) {
+            return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+          } else {
+            return null;
+          }
+          break;
+        case 'donate':
+          if (user.donations.length % 2 === 0) {
+            return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+          } else {
+            return null;
+          }
+          break;
+        default:
+          break;
       }
-      break;
-    case 'first_campaign':
-      tempAchievement = {
-        url: '/images/firstcampaign.png',
-        title: 'Yo ayudo a los démas',
-        text: 'Por crear tu primera campaña o donar dinero'
-      }
-      break;
-    default:
-      break;
-  }
+
+    })
+    .catch((err) => {
+      return err;
+    });
 }
 
 
