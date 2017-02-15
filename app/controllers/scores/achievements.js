@@ -21,10 +21,22 @@ LEVELS_COMPANY[4] = 'Responsabilidad social Rey';
 
 const ACHIEVEMENTS = [];
 ACHIEVEMENTS['help_others'] = {
-  url: 'firstcampaign.png',
+  url: 'helpothers.png',
   title: 'Yo ayudo a los démas',
   text: 'Por crear tu primera campaña o donar dinero'
 };
+
+ACHIEVEMENTS['photograph'] = {
+  url: 'photograph.png',
+  title: 'Fotografo',
+  text: 'Por subir fotos'
+};
+
+ACHIEVEMENTS['expert_category'] = (category) => {return {
+  url: 'expert_category.png',
+  title: 'Experto en ' + category,
+  text: 'Por donar más de dos veces en una categoría'
+}};
 
 
 
@@ -37,7 +49,7 @@ module.exports.addAchievement = (idUser, action) => {
     .catch((err) => {
       return err;
     });*/
-  User.findById(idUser).exec()
+  User.findById(idUser).populate(['donations.campaign']).exec()
     .then((user) => {
       let tempAchievement = {};
       switch (action) {
@@ -61,6 +73,42 @@ module.exports.addAchievement = (idUser, action) => {
             return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
           } else {
             return null;
+          }
+          break;
+        case 'media':
+          if (user.pictures_upload.length === 3) {
+            return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['photograph']}}).exec();
+          } else if (user.pictures_upload.length % 3 === 0) {
+            return User.update({'achievements.title': ACHIEVEMENTS['photograph'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+          } else {
+            return null;
+          }
+          break;
+        case 'donate_category':
+          if (user.donations.campaign) {
+            let campaignCategory = user.donations.campaign.category;
+            let count = campaignCategory => 
+              names.reduce((a, b) => 
+                Object.assign(a, {[b]: (a[b] || 0) + 1}), {})
+
+            const duplicates = dict => 
+              Object.keys(dict).filter((a) => {
+                if(dict[a] > 2) {
+                  User.find({'achievements.title': ACHIEVEMENTS['expert_category'](a).title}).exec()
+                    .then((category) => {
+                      if(category) {
+                        if(dict[a]%2 === 0){
+                          return User.update({'achievements.title': ACHIEVEMENTS['expert_category'](a).title}, {$inc: {'achievements.$.level': 1}}).exec();
+                        }
+                      } else {
+                        return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['expert_category'](a)}}).exec();
+                      }
+                    })
+                    .catch((err) => {
+                      return err;
+                    });
+                }
+              });
           }
           break;
         default:

@@ -490,15 +490,15 @@ router.post('/campaign/:idCampaign/media', function (req, res, next) {
       };
       Media.create(media)
         .then((media) => {
-          return Promise.all([Campaign.update({'_id': req.params.idCampaign}, {$push: {'pictures': media._id}}).exec(), 
-                  Person.update({'_id': req.params.idCampaign}, {$push: {'pictures_upload': media._id}}).exec()]);
+          return [Campaign.update({'_id': req.params.idCampaign}, {$push: {'pictures': media._id}}).exec(), 
+                  Person.update({'_id': req.user._id}, {$push: {'pictures_upload': media._id}}).exec()];
         })
-        .then((ucrslt) => {
+        .then((ucrslt, uprslt) => {
           return ScoreUpdate.updateScore(req.user._id, 'upload_picture');
         })
-        /*.then((ucrslt) => {
+        .then((ucrslt) => {
           return AchievementsCtrl.addAchievement(req.user._id, 'media');;
-        })*/
+        })
         .then((usrslt) => {
           return res.redirect('/campaigns/' + req.params.idCampaign);
         })
