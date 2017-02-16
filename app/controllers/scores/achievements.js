@@ -3,23 +3,15 @@ const User = require('../../models/user');
 const Person = require('../../models/person');
 const Company = require('../../models/company');
 
-const LEVELS_PERSON = [];
-LEVELS_PERSON[0] = 'Donador Baby';
-LEVELS_PERSON[1] = 'Donador Junior';
-LEVELS_PERSON[2] = 'Donador Escudero';
-LEVELS_PERSON[3] = 'Donador Caballero';
-LEVELS_PERSON[4] = 'Donador Rey';
-LEVELS_PERSON[5] = 'Donador Baby';
-
-const LEVELS_COMPANY = [];
-LEVELS_COMPANY[0] = 'Donador Baby';
-LEVELS_COMPANY[1] = 'Responsabilidad Social Junior';
-LEVELS_COMPANY[2] = 'Resposabilidad Social Escudero';
-LEVELS_COMPANY[3] = 'Responsabilidad Social Caballero';
-LEVELS_COMPANY[4] = 'Responsabilidad social Rey';
-
-
 const ACHIEVEMENTS = [];
+
+ACHIEVEMENTS['baby_donor'] = {
+  url: 'babydonor.png',
+  title: 'Baby Donador',
+  text: 'Por registrarte y ganar 100 pts.'
+};
+
+
 ACHIEVEMENTS['help_others'] = {
   url: 'helpothers.png',
   title: 'Yo ayudo a los démas',
@@ -44,6 +36,11 @@ ACHIEVEMENTS['global_donor'] = {
   text: 'Por donar en más de 3 paises diferentes..'
 };
 
+ACHIEVEMENTS['critic'] = {
+  url: 'critic.png',
+  title: 'Critico',
+  text: 'Por hacer valoraciones..'
+};
 
 
 
@@ -52,6 +49,9 @@ module.exports.addAchievement = (idUser, action) => {
     .then((user) => {
       let tempAchievement = {};
       switch (action) {
+        case 'register':
+          return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['baby_donor']}}).exec();
+          break;
         case 'create_campaign':
           if (user.created_campaigns.length === 1) {
             //user.achievements.push(ACHIEVEMENTS['help_others']);
@@ -119,6 +119,19 @@ module.exports.addAchievement = (idUser, action) => {
             } else if(filterCountries.length%3 === 0){
               return User.update({'achievements.title': ACHIEVEMENTS['global_donor'].title}, {$inc: {'achievements.$.level': 1}}).exec();
             }
+          }
+          break;
+        case 'review':
+          if (user.reviews.length > 0) {
+            if (user.reviews.length === 0) {
+              return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['critic']}}).exec();
+            } else if (user.reviews.length%3 === 0) {
+              return User.update({'achievements.title': ACHIEVEMENTS['critic'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+            } else {
+              return null;
+            }
+          } else {
+            return null;
           }
           break;
         default:

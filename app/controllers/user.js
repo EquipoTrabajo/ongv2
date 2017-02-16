@@ -274,6 +274,21 @@ router.post('/donation-receiving-entity', (req, res, next) => {
     });
 });
 
+router.post('/review/:idUser', (req, res, next) => {
+  req.body.user = req.user._id;
+  User.findByIdAndUpdate(req.params.idUser, {$push: {'reviews': req.body}}).exec()
+    .then((review) => {
+      req.body.user = req.params.idUser;
+      return User.findByIdAndUpdate(req.user._id, {$push: {'reviews': req.body}}).exec()
+    })
+    .then((review) => {
+      return res.json(review);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
 
 /*********CAMPAIGN********/
 
@@ -519,7 +534,7 @@ router.get('/:username', (req, res, next) => {
       if (user.type === 'person') {
         return res.render('view-person', {'user': req.user, 'person': user});
       } else if(user.type === 'donationReceivingEntity') {
-        return res.render('view-person', {'user': req.user, 'person': user});
+        return res.render('view-donationReceivingEntity', {'user': req.user, 'dre': user});
         //return res.json('fuck you');
       } else {
         return res.json('fuck you');

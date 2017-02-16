@@ -24,9 +24,6 @@ var donationReceivingEntitySchema = new Schema({
   }],
   donor_list_company: [{
     type: Schema.Types.ObjectId, ref:'User'
-  }],
-  reviews: [{
-    type: Schema.Types.ObjectId, ref:'Review'
   }]
 }, {discriminatorKey: 'type'});
 

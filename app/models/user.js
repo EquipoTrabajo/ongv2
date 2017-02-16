@@ -78,7 +78,27 @@ var userSchema = new Schema({
   }],
   level: {
 		type: String
-	}
+	},
+  reviews: [{
+    points: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+    text: {
+      type: String
+    },
+    user: {
+      type: Schema.Types.ObjectId, ref: 'User'
+    },
+    created_at: {
+      type: Date,
+      default: Date.now
+    },
+    comment: [{
+      type: Schema.Types.ObjectId, ref: 'Comment'
+    }]
+  }]
 }, {discriminatorKey: 'type'});
 
 var User = module.exports = mongoose.model('User', userSchema);
