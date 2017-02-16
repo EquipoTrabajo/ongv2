@@ -377,6 +377,9 @@ router.put('/campaign/:idCampaign/donate', (req, res, next) => {
     .then((update) => {
       return AchievementsCtrl.addAchievement(req.user._id, 'donate');
     })
+    .then((update) => {
+      return AchievementsCtrl.addAchievement(req.user._id, 'donate_category');
+    })
     .then((udonation) => {
       return ScoreUpdate.updateScore(req.user._id, 'donate');
     })

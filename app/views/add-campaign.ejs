@@ -12,8 +12,12 @@
                         <input type='hidden' name='csrfmiddlewaretoken' value='XFe2rTYl9WOpV8U6X5CfbIuOZOELJ97S' />
                         <div id="div_id_username" class="form-group required">
                             <label for="category" class="control-label col-md-4  requiredField"> Categoría <span class="asteriskField">*</span> </label>
-                            <div class="controls col-md-8 ">
-                                <input class="input-md  textinput textInput form-control" id="category" maxlength="30" name="category" placeholder="Catería de la campaña" style="margin-bottom: 10px" type="text" />
+                            <div class="controls col-md-8 " class="form-control">
+                              <select name="category" id="category">
+                                <option value="mascotas">Mascotas</option>
+                                <option value="niños">Niños</option>
+                                <option value="tercera edad">Tercera Edad</option>
+                              </select>
                             </div>
                         </div>
                         <div id="div_id_email" class="form-group required">
