@@ -13,7 +13,7 @@
                         <div id="div_id_username" class="form-group required">
                             <label for="category" class="control-label col-md-4  requiredField"> Categoría <span class="asteriskField">*</span> </label>
                             <div class="controls col-md-8 " class="form-control">
-                              <select name="category" id="category">
+                              <select name="category" id="category" class="form-control">
                                 <option value="mascotas">Mascotas</option>
                                 <option value="niños">Niños</option>
                                 <option value="tercera edad">Tercera Edad</option>
@@ -65,13 +65,13 @@
                         <div id="div_id_location" class="form-group required">
                             <label for="address.state" class="control-label col-md-4  requiredField"> Estado<span class="asteriskField">*</span> </label>
                             <div class="controls col-md-8 ">
-                                <input class="input-md textinput textInput form-control" id="address[state]" name="address[state]" placeholder="Estado de la campaña" style="margin-bottom: 10px" type="text" />
+                              <select name="address[state]" id="states" class="form-control"></select>
                             </div> 
                         </div> 
                         <div id="div_id_location" class="form-group required">
                             <label for="address.country" class="control-label col-md-4  requiredField"> País<span class="asteriskField">*</span> </label>
                             <div class="controls col-md-8 ">
-                                <input class="input-md textinput textInput form-control" id="address.country" name="address[country]" placeholder="País de la campaña" style="margin-bottom: 10px" type="text" />
+                              <select name="address[country]" id="countries" class="form-control"></select>
                             </div> 
                         </div> 
                         <div class="form-group"> 
@@ -88,6 +88,7 @@
 </div>
 <script>
    $(document).ready(function() {
+      populateCountries("countries", "states");
 
       $( "#add-campaign" ).submit(function( event ) {
           event.preventDefault();

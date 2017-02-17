@@ -107,6 +107,9 @@ var campaignSchema = new Schema({
     created_at: {
       type: Date,
       default: Date.now
+    },
+    gratitude: {
+      type: Schema.Types.ObjectId, ref: 'Gratitude'
     }
   }],
   comments: [{

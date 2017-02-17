@@ -217,7 +217,7 @@
               <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#companies" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Empresas</a>
                 </li>
-                <li role="presentation" class=""><a href="#activities" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Donaste</a>
+                <li role="presentation" class=""><a href="#activities" role="tab" id="achievements-tab" data-toggle="tab" aria-expanded="false">Logros</a>
                 </li>
                 <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Voluntario</a>
                 </li>
@@ -255,26 +255,24 @@
 
                   </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="activities" aria-labelledby="profile-tab">
+                <div role="tabpanel" class="tab-pane fade" id="activities" aria-labelledby="achievements-tab">
                   <div class="x_content">
 
                     <table class="table table-bordered">
                       <thead>
                         <tr>
-                          <th>Nombre</th>
-                          <th>Fecha</th>
-                          <th>Cantidad</th>
+                          <th>Titulo</th>
+                          <th>Descripción</th>
+                          <th>Nivel</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% for(var i=0; i< profile.donations.length; i++) { %>
-                          <% if (profile.donations && profile.donations[0].campaign) { %>
+                        <% for(var i=0; i< profile.achievements.length; i++) { %>
                           <tr>
-                            <th scope="row"><a href="/campaigns/<%= profile.donations[i].campaign._id %>"><%= profile.donations[i].campaign.name %></a></th>
-                            <td><%= profile.donations[i].created_at %></td>
-                            <td><%= profile.donations[i].amount %></td>
+                            <th scope="row"><%= profile.achievements[i].title %></th>
+                            <td><%= profile.achievements[i].text %></td>
+                            <td><%= profile.achievements[i].level %></td>
                           </tr>
-                        <% } %>
                       <% } %>
                       </tbody>
                     </table>

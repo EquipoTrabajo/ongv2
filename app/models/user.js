@@ -56,6 +56,9 @@ var userSchema = new Schema({
     created_at: {
       type: Date,
       default: Date.now
+    },
+    gratitude: {
+      type: Schema.Types.ObjectId, ref: 'Gratitude'
     }
   }],
   created_campaigns: [{
@@ -74,6 +77,10 @@ var userSchema = new Schema({
     },
     text: {
       type: String
+    },
+    created_at: {
+      type: Date,
+      default: Date.now
     }
   }],
   level: {
