@@ -56,11 +56,32 @@ var userSchema = new Schema({
     created_at: {
       type: Date,
       default: Date.now
-    },
-    gratitude: {
-      type: Schema.Types.ObjectId, ref: 'Gratitude'
     }
   }],
+  gratitudes: [{
+      likes: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+      }],
+      dislikes: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+      }],
+      text: {
+        type: String
+      },
+      campaign: {
+        type: Schema.Types.ObjectId, ref: 'Campaign'
+      },
+      created_at: {
+        type: Date,
+        default: Date.now
+      },
+      comment: [{
+        type: Schema.Types.ObjectId, ref: 'Comment'
+      }],
+      successful: {
+        type: Boolean
+      }
+    }],
   created_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign'
   }],

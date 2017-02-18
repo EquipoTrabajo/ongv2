@@ -217,9 +217,9 @@
               <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#companies" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Empresas</a>
                 </li>
-                <li role="presentation" class=""><a href="#activities" role="tab" id="achievements-tab" data-toggle="tab" aria-expanded="false">Logros</a>
+                <li role="presentation" class=""><a href="#achievements" role="tab" id="achievements-tab" data-toggle="tab" aria-expanded="false">Logros</a>
                 </li>
-                <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Voluntario</a>
+                <li role="presentation" class=""><a href="#gratitudes" role="tab" id="gratitudes-tab" data-toggle="tab" aria-expanded="false">Agradecimientos</a>
                 </li>
               </ul>
               <div id="myTabContent" class="tab-content">
@@ -255,7 +255,7 @@
 
                   </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="activities" aria-labelledby="achievements-tab">
+                <div role="tabpanel" class="tab-pane fade" id="achievements" aria-labelledby="achievements-tab">
                   <div class="x_content">
 
                     <table class="table table-bordered">
@@ -279,26 +279,22 @@
 
                   </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+                <div role="tabpanel" class="tab-pane fade" id="gratitudes" aria-labelledby="gratitudes-tab">
                   <div class="x_content">
 
                     <table class="table table-bordered">
                       <thead>
                         <tr>
-                          <th>Nombre</th>
-                          <th>Fecha Inicio</th>
-                          <th>Fecha Fin</th>
-                          <th>Categoría</th>
+                          <th>Descripcion</th>
+                          <th>Fecha</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (profile.volunteer_campaigns) { %>
-                          <% for(var i=0; i< profile.volunteer_campaigns.length; i++) { %>
+                        <% if (profile.gratitudes) { %>
+                          <% for(var i=0; i< profile.gratitudes.length; i++) { %>
                             <tr>
-                              <th scope="row"><a href="/campaigns/<%= profile.volunteer_campaigns[i]._id %>"><%= profile.volunteer_campaigns[i].name %></a></th>
-                              <td><%= profile.volunteer_campaigns[i].start_date %></td>
-                              <td><%= profile.volunteer_campaigns[i].end_date %></td>
-                              <td><%= profile.volunteer_campaigns[i].category %></td>
+                              <td><%= profile.gratitudes[i].text %></td>
+                              <td><%= profile.gratitudes[i].created_at %></td>
                             </tr>
                           <% } %>
                         <% } %>

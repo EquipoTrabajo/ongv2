@@ -29,6 +29,10 @@ var campaignSchema = new Schema({
     type: Number,
     default: 0
   },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
   creators: [{
     type: Schema.Types.ObjectId, ref:'User',
     unique: true
@@ -107,9 +111,30 @@ var campaignSchema = new Schema({
     created_at: {
       type: Date,
       default: Date.now
+    }
+  }],
+  gratitudes: [{
+    likes: [{
+      type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    dislikes: [{
+      type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    text: {
+      type: String
     },
-    gratitude: {
-      type: Schema.Types.ObjectId, ref: 'Gratitude'
+    user: {
+      type: Schema.Types.ObjectId, ref: 'User'
+    },
+    created_at: {
+      type: Date,
+      default: Date.now
+    },
+    comment: [{
+      type: Schema.Types.ObjectId, ref: 'Comment'
+    }],
+    successful: {
+      type: Boolean
     }
   }],
   comments: [{

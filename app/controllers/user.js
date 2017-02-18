@@ -406,6 +406,19 @@ router.put('/campaign/:idCampaign/donate', (req, res, next) => {
 });
 
 
+router.post('/campaign/:idCampaign/gratitude/user/:idUser', (req, res, next) => {
+  Promise.all([
+    Campaign.findByIdAndUpdate(req.params.idCampaign, {$push: {'gratitudes': {'text': req.body.text, 'user': req.params.idUser}}}).exec(),
+    User.findByIdAndUpdate(req.params.idUser, {$push: {'gratitudes': {'text': req.body.text, 'campaign': req.params.idCampaign}}}).exec()
+    ])
+  .then((results) => {
+    return res.redirect('/campaigns/' + req.params.idCampaign);
+  })
+  .catch((err) => {
+    return next(err);
+  });
+});
+
 router.put('/campaign/:idCampaign/volunteer', (req, res, next) => {
   Campaign.update({'_id': req.params.idCampaign}, {$push: {'volunteers': req.user._id }})
     .then((campaign) => {

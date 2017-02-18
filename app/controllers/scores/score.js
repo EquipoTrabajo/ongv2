@@ -8,6 +8,7 @@ const SCORE_FB = 1000;
 const SCORE_CREATE_CAMPAIGN = 2000;
 
 const User = require('../../models/user');
+const Campaign = require('../../models/campaign');
 
 module.exports.updateScore = (idUser, action) => {
   let acctionValue = null;
@@ -41,4 +42,39 @@ module.exports.updateScore = (idUser, action) => {
       break;
   }
   return User.findByIdAndUpdate(idUser, {$inc: {'score': acctionValue}}).exec();
+}
+
+
+module.exports.succesfulCampaing = (idUser, idCampaign) => {
+  Campaign.findById(idCampaign)
+    .then((campaign) => {
+      if (campaign.pictures.length >= 3 && campaign.updates.length >= 5) {
+        let donors = campaign.donations.map(donation => {
+            return donation.user;
+        })
+       .filter( function( item, index, inputArray ) {
+          return inputArray.indexOf(item) == index;
+        });
+
+       let gratitudes = campaign.gratitude.map(gratitude => {
+        if (gratitud.successful) {
+          return gratitude.user;
+        }
+       })
+       .filter( function( item, index, inputArray ) {
+          return inputArray.indexOf(item) == index;
+        });
+
+       if (donors.sort().toString() === gratitudes.sort().toString()) {
+        let sumDonations = campaign.donations.map(donation => {
+            return donation.amount;
+        }).reduce(function(a, b){return a+b;})
+        if (sumDonations >= campaign.aspired_amout) {
+          return User.findByIdAndUpdate(idUser, {$inc: {'score': 2500}}).exec();
+        } else {
+          return User.findByIdAndUpdate(idUser, {$inc: {'score': 2000}}).exec();
+        }
+       }
+      }
+    })
 }

@@ -192,6 +192,13 @@
                         <p class="excerpt"><%= campaign.donations[i].amount %></a>
                         </p>
                       </div>
+                      <form action="/campaign/<%= campaign._id %>/gratitude/user/<%= campaign.donations[i].user._id %>" method="post" class="form-inline">
+                        <div class="form-group">
+                          <label for="text">Agradecimiento:</label>
+                          <input type="text" class="form-control" name="text">
+                        </div>
+                        <button type="input" class="btn btn-primary">Agradecer</button>
+                      </form>
                     </div>
                   </li>
               <% } %>

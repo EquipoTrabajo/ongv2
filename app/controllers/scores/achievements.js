@@ -2,8 +2,10 @@
 const User = require('../../models/user');
 const Person = require('../../models/person');
 const Company = require('../../models/company');
+const Campaign = require('../../models/campaign');
 
 const ACHIEVEMENTS = [];
+const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Noviembre', 'Diciembre'];
 
 ACHIEVEMENTS['baby_donor'] = {
   url: 'babydonor.png',
@@ -42,10 +44,22 @@ ACHIEVEMENTS['critic'] = {
   text: 'Por hacer valoraciones..'
 };
 
+ACHIEVEMENTS['thankful_ong'] = {
+  url: 'thankful_ong.png',
+  title: 'ONG Agradecida',
+  text: 'Por agradecer a todas las personas donadoras..'
+};
+
+ACHIEVEMENTS['xmonth'] = (month) => {return {
+  url: 'thankful_ong.png',
+  title: 'Mes de ' + MONTHS[month],
+  text: 'Por crear varias campañas en el mismo mes..'
+}};
+
 
 
 module.exports.addAchievement = (idUser, action) => {
-  User.findById(idUser).populate('donations.campaign').exec()
+  User.findById(idUser).populate(['donations.campaign', 'created_campaigns']).exec()
     .then((user) => {
       let tempAchievement = {};
       switch (action) {
@@ -57,7 +71,29 @@ module.exports.addAchievement = (idUser, action) => {
             //user.achievements.push(ACHIEVEMENTS['help_others']);
             return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['help_others']}}).exec();
           } else {
-            return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+            if (user.created_campaigns.length >= 4) {
+              let createdMonths = user.created_campaigns.map(campaign => {
+                return new Date(campaign.created_at).getMonth();
+              });
+              
+              const count = names => 
+                names.reduce((a, b) => 
+                  Object.assign(a, {[b]: (a[b] || 0) + 1}), {})
+
+              const duplicates = dict => 
+                Object.keys(dict).filter((a) => dict[a] > 3)
+
+              let duplicateMonth = duplicates(count(createdMonths));
+              if (duplicateMonth.length > 0) {
+                return Promise.all([User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['xmonth'](duplicateMonth[0])}}).exec(),
+                                    User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec()]);
+              } else {
+                return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+                
+              }
+            } else {
+              return User.update({'achievements.title': ACHIEVEMENTS['help_others'].title}, {$inc: {'achievements.$.level': 1}}).exec();
+            }
           }
           break;
         case 'volunteer':
@@ -107,7 +143,7 @@ module.exports.addAchievement = (idUser, action) => {
           }
           break;
         case 'global_donor':
-          let countries = donations.map(donation => {
+          let countries = user.donations.map(donation => {
               return donation.campaign.address.country;
           });
 
@@ -137,9 +173,38 @@ module.exports.addAchievement = (idUser, action) => {
         default:
           break;
       }
-
     })
     .catch((err) => {
       return err;
     });
+}
+
+module.exports.giveThankfulOng = (idUser, idCampaign) => {
+  Campaign.findById(idCampaign).exec()
+  .then((campaign) => {
+    if (Date.parser( new Date(campaign.end_date)) > Date.now()) {
+     let donors = campaign.donations.map(donation => {
+          return donation.user;
+      })
+     .filter( function( item, index, inputArray ) {
+        return inputArray.indexOf(item) == index;
+      });
+
+     let gratitudes = campaign.gratitude.map(gratitude => {
+      if (gratitud.successful) {
+        return gratitude.user;
+      }
+     })
+     .filter( function( item, index, inputArray ) {
+        return inputArray.indexOf(item) == index;
+      });
+
+     if (donors.sort().toString() === gratitudes.sort().toString()) {
+      return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['thankful_ong']}}).exec();
+     }
+    }
+
+  });
+
+
 }
