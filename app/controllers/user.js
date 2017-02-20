@@ -453,7 +453,7 @@ router.put('/campaign/:idCampaign/volunteer', (req, res, next) => {
 
 
 router.post('/campaign/:idCampaign/comment', (req, res, next) => {
-  Comment.create({'text': req.body.text, 'user': req.user._id})
+  Comment.create({'text': req.body.text, 'user': req.user._id, 'user_name': req.user.name})
     .then((comment) => {
       return Promise.all([Campaign.update({'_id': req.params.idCampaign}, {$push: {'comments': comment._id}}).exec(),
                             ScoreUpdate.updateScore(req.user._id, 'comment', req.user.type)])

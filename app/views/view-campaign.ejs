@@ -100,7 +100,7 @@
                     <div class="block">
                       <div class="tags">
                         <a href="" class="tag">
-                          <span><%= campaign.comments[i]._id %></span>
+                          <span><%= campaign.name %></span>
                         </a>
                       </div>
                       <div class="block_content">
@@ -108,7 +108,7 @@
                                         <a>Comment</a>
                                     </h2>
                         <div class="byline">
-                          <span><%= campaign.comments[i].created_at %></span> by <a><%= campaign.comments[i].user %></a>
+                          <span><%= campaign.comments[i].created_at %></span> by <a><%= campaign.comments[i].user_name %></a>
                         </div>
                         <p class="excerpt"><%= campaign.comments[i].text %></p>
                         </p>
@@ -181,7 +181,7 @@
                     <div class="block">
                       <div class="block_content">
                         <h2 class="title">
-                                        <a>Comment</a>
+                                        <a><%= campaign.donations[i].user.name %></a>
                                     </h2>
                         <div class="byline">
                           <span><%= campaign.donations[i].created_at %></span> by <a><%= campaign.donations[i].user.name %></a>

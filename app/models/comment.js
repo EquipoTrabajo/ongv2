@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var User = require('./user');
+
 var commentSchema = new Schema({
   likes: [{
     type: Schema.Types.ObjectId, ref: 'User',
@@ -16,6 +18,9 @@ var commentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId, ref: 'User'
   },
+  user_name: {
+    type: String
+  },
   created_at: {
     type: Date,
     default: Date.now
@@ -24,5 +29,17 @@ var commentSchema = new Schema({
     type: Schema.Types.ObjectId, ref: 'Comment'
   }]
 });
+
+commentSchema
+  .virtual('userName')
+  .get(() => {
+    User.findById(this.user).exec()
+      .then((user) => {
+        return user.name;
+      })
+      .catch((err) => {
+        return err;
+      });
+  });
 
 var Comment = module.exports = mongoose.model('Comment', commentSchema);
