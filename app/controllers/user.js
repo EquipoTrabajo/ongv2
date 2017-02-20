@@ -173,7 +173,7 @@ router.post('/company', (req, res, next) => {
 });
 
 
-router.get('/company/:idCompany/edit', (req, res, next) => {
+/*router.get('/company/:idCompany/edit', (req, res, next) => {
   Company.findById(req.params.idCompany).exec()
     .then((company) => {
       return res.render('edit-company', {'user': req.user, 'company': company});
@@ -181,7 +181,7 @@ router.get('/company/:idCompany/edit', (req, res, next) => {
     .catch((err) => {
       return next(err);
     });
-});
+});*/
 
 router.put('/company/:idCompany', (req, res, next) => {
   Company.update({'_id': req.params.idCompany}, req.body, {upsert: true}).exec()
@@ -282,10 +282,34 @@ router.post('/review/:idUser', (req, res, next) => {
       return User.findByIdAndUpdate(req.user._id, {$push: {'reviews': req.body}}).exec()
     })
     .then((review) => {
-      return res.json(review);
+      //return res.json(review);
+      return res.redirect('/profile');
     })
     .catch((err) => {
       return next(err);
+    });
+});
+var userAchievement = require('./achievement/userAchievement'); //TODO Delete
+var userLevels = require('./level/index');
+router.get('/user/:idUser/level', (req, res, next) => {
+  if (req.user.type === 'person') {
+    userLevels.person.updateLevelPerson(req.user._id);
+  }
+});
+
+router.get('/user/:idUser/score', (req, res, next) => {
+
+});
+
+router.get('/user/:idUser/achievement', (req, res, next) => {
+  userAchievement.addAchievement(req.user._id)
+    .then((rslt) => {
+      console.log('result na: ' + JSON.stringify(rslt, null, ' '));
+      res.josn(rslt);
+    })
+    .catch((err) => {
+      console.log('result na err: ' + JSON.stringify(err, null, ' '));
+      res.json(err);
     });
 });
 
@@ -307,15 +331,13 @@ router.post('/campaign', (req, res, next) => {
     .then((update) => {
       return ScoreUpdate.updateScore(req.user._id, 'create_campaign');
     })
-    .then((update) => {
+    /*.then((update) => {
       return AchievementsCtrl.addAchievement(req.user._id, 'create_campaign');
-    })
+    })*/
     .then((surslt) => {
-      console.log(surslt, null, ' ');
       return res.json('Surslt: ' + surslt);
     })
     .catch((err) => {
-      console.log('Erro: ' + err, null, ' ');
       return next(err);
     });
 });
@@ -389,12 +411,12 @@ router.put('/campaign/:idCampaign/donate', (req, res, next) => {
         campaign: req.params.idCampaign
       }}});
     })
-    .then((update) => {
+    /*.then((update) => {
       return AchievementsCtrl.addAchievement(req.user._id, 'donate');
     })
     .then((update) => {
       return AchievementsCtrl.addAchievement(req.user._id, 'donate_category');
-    })
+    })*/
     .then((udonation) => {
       return ScoreUpdate.updateScore(req.user._id, 'donate');
     })
@@ -427,9 +449,9 @@ router.put('/campaign/:idCampaign/volunteer', (req, res, next) => {
     .then((person) => {
       return ScoreUpdate.updateScore(req.user._id, 'volunteer');
     })
-    .then((update) => {
+    /*.then((update) => {
       return AchievementsCtrl.addAchievement(req.user._id, 'volunteer');
-    })
+    })*/
     .then((score) => {
       return res.json(score);
     }).catch((err) => {
@@ -548,6 +570,9 @@ router.get('/:username', (req, res, next) => {
         return res.render('view-person', {'user': req.user, 'person': user});
       } else if(user.type === 'donationReceivingEntity') {
         return res.render('view-donationReceivingEntity', {'user': req.user, 'dre': user});
+        //return res.json('fuck you');
+      } else if(user.type === 'company') {
+        return res.render('view-company', {'user': req.user, 'company': user});
         //return res.json('fuck you');
       } else {
         return res.json('fuck you');

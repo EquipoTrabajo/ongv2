@@ -40,7 +40,15 @@ var userSchema = new Schema({
 	score: {
 		type: Number
 	},
-	donations: [{
+  facebook_btn: {
+    type: Boolean,
+    default: false
+  },
+  edited: {
+    type: Boolean,
+    default: false
+  },
+  donations: [{
     amount: {
       type: Number
     },
