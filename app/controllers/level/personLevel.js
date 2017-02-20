@@ -7,7 +7,7 @@ LEVELS_PERSON[2] = 'Donador Escudero';
 LEVELS_PERSON[3] = 'Donador Caballero';
 LEVELS_PERSON[4] = 'Donador Rey';
 
-module.exports.updateLevelPerson = (idUser) => {
+module.exports.updateLevel = (idUser) => {
   let personScore = null;
   Person.findById(idUser).exec()
     .then((person) => {

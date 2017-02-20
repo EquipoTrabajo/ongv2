@@ -8,7 +8,7 @@ LEVELS_COMPANY[2] = 'Resposabilidad Social Escudero';
 LEVELS_COMPANY[3] = 'Responsabilidad Social Caballero';
 LEVELS_COMPANY[4] = 'Responsabilidad social Rey';
 
-module.exports.updateLevelCompany = (idUser) => {
+module.exports.updateLevel = (idUser) => {
   let personScore = null;
   Company.findById(idUser).exec()
     .then((company) => {

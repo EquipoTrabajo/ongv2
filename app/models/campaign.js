@@ -142,10 +142,10 @@ var campaignSchema = new Schema({
   }],
   updates: [{
     likes: [{
-      type: Schema.Types.ObjectId, ref: 'Person'
+      type: Schema.Types.ObjectId, ref: 'User'
     }],
     dislikes: [{
-      type: Schema.Types.ObjectId, ref: 'Person'
+      type: Schema.Types.ObjectId, ref: 'User'
     }],
     picture: {
       type: String
@@ -172,40 +172,3 @@ var campaignSchema = new Schema({
 
 var Campaign = module.exports = mongoose.model('Campaign', campaignSchema);
 
-
-module.exports.getAllCampaigns = () => {
-  Campaign.find().exec((err, campaigns) => {
-    if(err){
-      throw err;
-    }
-    return campaigns;
-  });
-}
-
-
-module.exports.getRecommendedCampaigns = (id, callback) => {
-  Person.findById(id, (err, person) => {
-    if(err){
-      throw err;
-    }
-    Campaign.find({'_id': {$in: person.liked_campaigns}}, (err, campaigns) => {
-      if (err) {
-        return err;
-      }
-      var creators = [];
-      var tempCampId = [];
-      for(var camp in campaigns) {
-        tempCampId.push(campaigns[camp]._id);
-        for(var i=0; i<campaigns[camp].creators.length; i++) {
-          creators.push(campaigns[camp].creators[i]);
-        }
-      }
-      Campaign.find({'creators': {$in: creators}, '_id': {$nin: tempCampId}, 'priority': {$gt: 0}, 'start_date': {$lt: moment(Date.now()).format()}, 'end_date': {$gt: moment(Date.now()).format()}}, callback);
-    });
-  });
-}
-
-
-module.exports.getNearbyCampaigns = function (user, callback) {
-  Campaign.find({'address.city': user}).exec(callback);
-}

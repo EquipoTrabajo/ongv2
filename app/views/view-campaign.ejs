@@ -6,7 +6,7 @@
   <table class="table table-striped">
     <tbody>
       <tr>
-        <th scope="row">Categoría</th>
+        <th scope="row"></th>
         <td><%= campaign.category %></td>
       </tr>
       <tr>
@@ -43,16 +43,13 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="btn-group" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" id="btn-like">
+          <button type="button" class="btn btn-default" id="btn-like" <% if (campaign.likes.indexOf(user._id) >= 0) { %> disabled="disabled" <%}%>>
             <span class="glyphicon glyphicon-thumbs-up"></span>
           </button>
-          <button type="button" class="btn btn-default" id="btn-dislike">
+          <button type="button" class="btn btn-default" id="btn-dislike" <% if (campaign.dislikes.indexOf(user._id) >= 0) { %> disabled="disabled" <%}%>>
             <span class="glyphicon glyphicon-thumbs-down"></span>
           </button>
-          <button type="button" class="btn btn-default" id="btn-share">
-            <span class="glyphicon glyphicon-share-alt"></span>
-          </button>
-          <button type="button" class="btn btn-default" id="btn-volunteer">
+          <button type="button" class="btn btn-default" id="btn-volunteer" <% if (campaign.volunteers.indexOf(user._id) >= 0) { %> disabled="disabled" <%}%>>
             <span class="">Ser Voluntario</span>
           </button>
         </div>

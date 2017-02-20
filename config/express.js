@@ -30,6 +30,7 @@ module.exports = function(app, config) {
   app.use(methodOverride());
 
   passport.use(require('../app/middleware/facebook-auth'));
+  passport.use(require('../app/middleware/local-auth'));
 
   app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 

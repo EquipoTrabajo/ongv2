@@ -64,7 +64,7 @@ module.exports.addAchievement = (idUser) => {
       });
 
       let nDonations = user.donations.length;
-      //let nvolunteer = user.volunteer_campaigns.length;
+      let nvolunteer = user.volunteer_campaigns.length;
       let nCreatedCampaigns = user.created_campaigns.length;
       let nPicturesUploaded = user.pictures_upload.length;
       let nReviews = user.reviews.length;
@@ -75,7 +75,7 @@ module.exports.addAchievement = (idUser) => {
       } else if ((user.donations.length === 1 || user.created_campaigns.length === 1) && (titleAchievements.indexOf(ACHIEVEMENTS['help_others'].title) < 0)) {
         user.achievements.push(ACHIEVEMENTS['help_others']);
       } else if (titleAchievements.indexOf(ACHIEVEMENTS['help_others'].title) > 0) {
-        let helpOthersLevel = Math.floor(nDonations/2) + nCreatedCampaigns;
+        let helpOthersLevel = Math.floor(nDonations/2) + Math.floor(nvolunteer/2) + nCreatedCampaigns;
         user.achievements[user.achievements.findIndex(o => o.title === ACHIEVEMENTS['help_others'].title)].level = helpOthersLevel;
       }
 
@@ -117,7 +117,6 @@ module.exports.addAchievement = (idUser) => {
         let donationsCount = user.donations.reduce((a, b) =>
           Object.assign(a, {[b.campaign.category]: (a[b.campaign.category] || 0) + 1}), {});
 
-        console.log("this is donatoinCount: " + donationsCount);
         Object.keys(donationsCount).filter((a) => {
           if (donationsCount[a] > 2) {
             if (titleAchievements.indexOf(ACHIEVEMENTS['expert_category'](a).title) < 0) {
@@ -139,11 +138,39 @@ module.exports.addAchievement = (idUser) => {
         }
       }
 
-
-
       return user.save();
     })
     .catch((err) => {
       return err;
     });
+}
+
+module.exports.giveThankfulOng = (idUser, idCampaign) => {
+  Campaign.findById(idCampaign).exec()
+  .then((campaign) => {
+    if (Date.parser( new Date(campaign.end_date)) > Date.now()) {
+      let donors = campaign.donations.map(donation => {
+          return donation.user;
+      })
+     .filter( function( item, index, inputArray ) {
+        return inputArray.indexOf(item) == index;
+      });
+
+     let gratitudes = campaign.gratitude.map(gratitude => {
+      if (gratitud.successful) {
+        return gratitude.user;
+      }
+     })
+     .filter( function( item, index, inputArray ) {
+        return inputArray.indexOf(item) == index;
+      });
+
+      if (donors.sort().toString() === gratitudes.sort().toString()) {
+        return User.findByIdAndUpdate(idUser, {$push: {'achievements': ACHIEVEMENTS['thankful_ong']}}).exec();
+      }
+    }
+  })
+  .catch((err) => {
+    return err;
+  });
 }

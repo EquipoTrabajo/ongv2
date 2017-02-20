@@ -10,8 +10,7 @@ var express = require('express'),
   Media = require('../models/media'),
   Campaign = require('../models/campaign');
 
-const ScoreUpdate = require('../controllers/scores/score');
-const AchievementsCtrl = require('../controllers/scores/achievements');
+const ScoreUpdate = require('../controllers/score/index');
 
 var fs = require('fs');
 var path = require('path');
@@ -293,7 +292,11 @@ var userAchievement = require('./achievement/userAchievement'); //TODO Delete
 var userLevels = require('./level/index');
 router.get('/user/:idUser/level', (req, res, next) => {
   if (req.user.type === 'person') {
-    userLevels.person.updateLevelPerson(req.user._id);
+    userLevels.person.updateLevel(req.user._id);
+  } else if (req.user.type === 'company'){
+    userLevels.company.updateLevel(req.user._id);
+  } else if (req.user.type === 'donationReceivingEntity') {
+    userLevels.person.updateLevel(req.user._id);
   }
 });
 
@@ -329,11 +332,8 @@ router.post('/campaign', (req, res, next) => {
       return User.update({'_id': req.user._id}, {$push: {'created_campaigns': campaign._id}});
     })
     .then((update) => {
-      return ScoreUpdate.updateScore(req.user._id, 'create_campaign');
+      return ScoreUpdate.updateScore(req.user._id, 'create_campaign', req.user.type, req.user.type);
     })
-    /*.then((update) => {
-      return AchievementsCtrl.addAchievement(req.user._id, 'create_campaign');
-    })*/
     .then((surslt) => {
       return res.json('Surslt: ' + surslt);
     })
@@ -411,14 +411,8 @@ router.put('/campaign/:idCampaign/donate', (req, res, next) => {
         campaign: req.params.idCampaign
       }}});
     })
-    /*.then((update) => {
-      return AchievementsCtrl.addAchievement(req.user._id, 'donate');
-    })
-    .then((update) => {
-      return AchievementsCtrl.addAchievement(req.user._id, 'donate_category');
-    })*/
     .then((udonation) => {
-      return ScoreUpdate.updateScore(req.user._id, 'donate');
+      return ScoreUpdate.updateScore(req.user._id, 'donate', req.user.type);
     })
     .then((score) => {
       return res.json(score);
@@ -447,11 +441,8 @@ router.put('/campaign/:idCampaign/volunteer', (req, res, next) => {
       return Person.update({'_id': req.user._id}, {$push: {'volunteer_campaigns': req.params.idCampaign}});
     })
     .then((person) => {
-      return ScoreUpdate.updateScore(req.user._id, 'volunteer');
+      return ScoreUpdate.updateScore(req.user._id, 'volunteer', req.user.type);
     })
-    /*.then((update) => {
-      return AchievementsCtrl.addAchievement(req.user._id, 'volunteer');
-    })*/
     .then((score) => {
       return res.json(score);
     }).catch((err) => {
@@ -465,7 +456,7 @@ router.post('/campaign/:idCampaign/comment', (req, res, next) => {
   Comment.create({'text': req.body.text, 'user': req.user._id})
     .then((comment) => {
       return Promise.all([Campaign.update({'_id': req.params.idCampaign}, {$push: {'comments': comment._id}}).exec(),
-                            ScoreUpdate.updateScore(req.user._id, 'comment')])
+                            ScoreUpdate.updateScore(req.user._id, 'comment', req.user.type)])
       .then((values) => {
         return res.json(values);
       })
@@ -547,10 +538,7 @@ router.post('/campaign/:idCampaign/media', function (req, res, next) {
                   Person.update({'_id': req.user._id}, {$push: {'pictures_upload': media._id}}).exec()];
         })
         .then((ucrslt, uprslt) => {
-          return ScoreUpdate.updateScore(req.user._id, 'upload_picture');
-        })
-        .then((ucrslt) => {
-          return AchievementsCtrl.addAchievement(req.user._id, 'media');;
+          return ScoreUpdate.updateScore(req.user._id, 'upload_picture', req.user.type);
         })
         .then((usrslt) => {
           return res.redirect('/campaigns/' + req.params.idCampaign);

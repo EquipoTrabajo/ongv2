@@ -49,7 +49,8 @@ var personSchema = new Schema({
     unique: true
   }],
   volunteer_campaigns: [{
-    type: Schema.Types.ObjectId, ref: 'Campaign'
+    type: Schema.Types.ObjectId, ref: 'Campaign',
+    unique: true
   }],
   liked_campaigns: [{
     type: Schema.Types.ObjectId, ref: 'Campaign',

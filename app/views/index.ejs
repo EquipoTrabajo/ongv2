@@ -2,15 +2,15 @@
 <script>
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
+    // console.log('statusChangeCallback');
+    // console.log(response);
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      window.location.href = '/login/facebook';
+      //window.location.href = '/login/facebook';
     }
   }
 
@@ -64,12 +64,12 @@
   <div class="container-fluid">
     <div class="container">
       <div class="row">
-        <form class="col-xs-4">
+        <form class="col-xs-4" method="post" action="/login/local">
           <div class="form-group">
             <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de Usuario">
           </div>
           <div class="form-group">
-            <input type="password" class="form-control" id="password" placeholder="Clave">
+            <input type="password" name="password" class="form-control" id="password" placeholder="Clave">
           </div>
           <button type="submit" class="btn btn-primary">Entrar</button>
           <a href="/login/facebook" class="btn btn-default">Entrar con Facebook</a>
