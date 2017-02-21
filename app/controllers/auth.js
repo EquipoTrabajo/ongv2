@@ -7,19 +7,10 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
-passport.serializeUser(function(user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj);
-});
-
-router.post('/login/local', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/home');
-});
+router.post('/login/local', passport.authenticate('local', {  
+  successRedirect: '/home',
+  failureRedirect: '/login',
+}));
 
 router.get('/login/facebook',
   passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'user_birthday', 'user_likes', 'user_location', 'user_education_history'] }));

@@ -1,14 +1,20 @@
 const Strategy = require('passport-local').Strategy;
 const User = require('../models/user');
+const Dre = require('../models/donationReceivingEntity');
 
-const localStrategy = new Strategy((username, password, callback) => {
+const localStrategy = new Strategy({
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true,
+  },
+  function (req, username, password, callback) {
   console.log('Estoy en local strategy');
-  User.findOne({'username': username}).exec()
+  Dre.findOne({'username': username}).exec()
     .then((user) => {
       console.log(JSON.stringify(user, null, ' '));
       if (user) {
         return callback(null, user);
-      }else {
+      } else {
         return callback(null, false);
       }
     })

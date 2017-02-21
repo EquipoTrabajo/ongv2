@@ -38,7 +38,8 @@ var userSchema = new Schema({
 		}
 	},
 	score: {
-		type: Number
+		type: Number,
+    default: 100
 	},
   facebook_btn: {
     type: Boolean,

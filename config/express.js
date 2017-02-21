@@ -29,8 +29,16 @@ module.exports = function(app, config) {
   app.use(express.static(config.root + '/public'));
   app.use(methodOverride());
 
-  passport.use(require('../app/middleware/facebook-auth'));
-  passport.use(require('../app/middleware/local-auth'));
+  passport.serializeUser(function(user, cb) {
+    cb(null, user);
+  });
+
+  passport.deserializeUser(function(obj, cb) {
+    cb(null, obj);
+  });
+
+  passport.use('local', require('../app/middleware/local-auth'));
+  // passport.use('facebook', require('../app/middleware/facebook-auth'));
 
   app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
