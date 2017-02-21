@@ -21,6 +21,9 @@ var commentSchema = new Schema({
   user_name: {
     type: String
   },
+  user_picture: {
+    type: String
+  },
   created_at: {
     type: Date,
     default: Date.now
