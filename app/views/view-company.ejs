@@ -1,6 +1,7 @@
 <% include header %>
   <% include nav %>
 <div class="col-md-3 col-xs-12 widget widget_tally_box">
+    <div id="idCompany" data-idCompany="<%= company._id %>" style="display: none;"></div>
     <div class="x_panel fixed_height_390">
       <div class="x_content">
 
@@ -49,7 +50,7 @@
         </p>
       </div>
       <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default" id="btnFollow"><i class="fa fa-rss"></i> Seguir</button>
+        <button type="button" class="btn btn-default" id="btnFollowCompany" <% if (company.followers.indexOf(user._id) >= 0) { %> disabled="disabled" <%}%> ><i class="fa fa-rss"></i> Seguir</button>
       </div>
     </div>
   </div>

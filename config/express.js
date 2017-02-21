@@ -38,7 +38,7 @@ module.exports = function(app, config) {
   });
 
   passport.use('local', require('../app/middleware/local-auth'));
-  // passport.use('facebook', require('../app/middleware/facebook-auth'));
+  passport.use('facebook', require('../app/middleware/facebook-auth'));
 
   app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 

@@ -1,5 +1,6 @@
 <% include header %>
   <% include nav %>
+  <div id="idPerson" data-idPerson="<%= person._id %>" style="display: none;"></div>
 <img src="<%= person.cover_picture %>" class="img-responsive">
   <div class="container body">
     <div class="main_container">
@@ -54,8 +55,8 @@
             </div>
           </div>
           <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default" id="btnFollow"><i class="fa fa-rss"></i> Seguir</button>
-            <button type="button" class="btn btn-default" id="addFriend"><i class="fa fa-user-plus"></i> Añadir Amigo</button>
+            <button type="button" class="btn btn-default" id="btnFollowPerson" <% if (person.followers.indexOf(user._id) >= 0) { %> disabled="disabled" <%}%>><i class="fa fa-rss"></i> Seguir</button>
+            <!-- <button type="button" class="btn btn-default" id="addFriend"><i class="fa fa-user-plus"></i> Añadir Amigo</button> -->
           </div>
         </div>
       </div>

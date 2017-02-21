@@ -135,6 +135,10 @@ var userSchema = new Schema({
     comment: [{
       type: Schema.Types.ObjectId, ref: 'Comment'
     }]
+  }],
+  followers: [{
+    type: Schema.Types.ObjectId, ref: 'User',
+    unique: true
   }]
 }, {discriminatorKey: 'type'});
 

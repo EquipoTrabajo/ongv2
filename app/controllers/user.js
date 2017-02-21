@@ -11,6 +11,9 @@ var express = require('express'),
   Campaign = require('../models/campaign');
 
 const ScoreUpdate = require('../controllers/score/index');
+const userAchievement = require('./achievement/userAchievement');
+const userLevels = require('./level/index');
+
 
 var fs = require('fs');
 var path = require('path');
@@ -288,8 +291,7 @@ router.post('/review/:idUser', (req, res, next) => {
       return next(err);
     });
 });
-var userAchievement = require('./achievement/userAchievement'); //TODO Delete
-var userLevels = require('./level/index');
+
 router.get('/user/:idUser/level', (req, res, next) => {
   if (req.user.type === 'person') {
     userLevels.person.updateLevel(req.user._id);
@@ -313,6 +315,40 @@ router.get('/user/:idUser/achievement', (req, res, next) => {
     .catch((err) => {
       console.log('result na err: ' + JSON.stringify(err, null, ' '));
       res.json(err);
+    });
+});
+
+
+router.put('/user/:idUser/follow', (req, res, next) => {
+  Promise.all([Person.findByIdAndUpdate(req.user._id, {$push: {'followed_people': req.params.idUser}}).exec(), 
+              User.findByIdAndUpdate(req.params.idUser, {$push: {'followers': req.user._id}}).exec()])
+    .then((person) => {
+      return res.json(person);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+router.put('/company/:idCompany/follow', (req, res, next) => {
+  Promise.all([Person.findByIdAndUpdate(req.user._id, {$push: {'followed_companies': req.params.idCompany}}).exec(),
+               User.findByIdAndUpdate(req.params.idCompany, {$push: {'followers': req.user._id}}).exec()])
+    .then((rslt) => {
+      return res.json(rslt);
+    })
+    .catch((err) => {
+      return nex(err);
+    });
+});
+
+router.put('/donationReceivingEntity/:idDonationReceivingEntity/follow', (req, res, next) => {
+  Promise.all([Person.findByIdAndUpdate(req.user._id, {$push: {'followed_receivingEntities': req.params.idDonationReceivingEntity}}).exec(), 
+                User.findByIdAndUpdate(req.params.idDonationReceivingEntity, {$push: {'followers': req.user._id}}).exec()])
+    .then((rslt) => {
+      return res.json(rslt);
+    })
+    .catch((err) => {
+      return next(err);
     });
 });
 
